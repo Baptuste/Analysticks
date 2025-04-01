@@ -10,10 +10,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-scripts": "5.0.1",
-<<<<<<< HEAD
     "styled-components": "^6.1.16",
-=======
->>>>>>> 21d725322ed87b4dd76bf589532583160b76a8ba
     "web-vitals": "^2.1.4"
   },
   "scripts": {
