@@ -1,0 +1,40 @@
+/* Reset de base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Scrollbar minimaliste */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #00ff88;
+  border-radius: 3px;
+}
+
+/* Fond global */
+body {
+  background-color: #0d1113;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #00ff88;
+  min-height: 100vh;
+}
+
+/* Animation globale au chargement */
+body,
+html {
+  animation: fadeInGlobal 0.8s ease-in-out;
+}
+
+@keyframes fadeInGlobal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

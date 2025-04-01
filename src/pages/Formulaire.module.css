@@ -1,0 +1,173 @@
+.formulaireContainer {
+  padding: 40px;
+  max-width: 600px;
+  margin: 60px auto;
+  background-color: #151b1e;
+  border-radius: 20px;
+  box-shadow: 0 0 30px #00ff88;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  min-height: 100vh;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  color: #00ff88;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+label {
+  font-weight: bold;
+  text-align: center;
+}
+
+input,
+select {
+  width: 70%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: #0d1113;
+  color: #00ff88;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
+}
+
+.logoGlow {
+  width: 120px;
+  margin: 0 auto 10px auto;
+  display: block;
+  animation: fadeIn 1.2s ease-out forwards;
+  filter: drop-shadow(0 0 6px #00ff88) drop-shadow(0 0 15px #00ff88);
+  transition: transform 0.3s ease;
+}
+
+.logoGlow:hover {
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation du bouton Spécial uniquement en mode actif */
+.specialButtonWrapper {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.specialButtonWrapper.bounce {
+  animation: bounce 0.5s infinite alternate;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.smokeButton {
+  margin: 30px auto;
+  padding: 20px 50px;
+  background-color: #00ff88;
+  color: #000;
+  font-weight: bold;
+  border-radius: 30px;
+  border: 2px solid #00ff88;
+  font-size: 1.5rem;
+  font-family: 'Permanent Marker', cursive;
+  cursor: pointer;
+  box-shadow: 0 0 25px #00ff88;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.smokeButton:hover {
+  animation: pulse 1s infinite;
+}
+
+.smokeButton::after {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
+  animation: puff 1s ease-out forwards;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.smokeButton:active::after {
+  opacity: 1;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 10px #00ff88;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 30px #00ff88;
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 10px #00ff88;
+    transform: scale(1);
+  }
+}
+
+@keyframes puff {
+  0% {
+    transform: translateX(-50%) translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(-50%) translateY(-60px) scale(1.4);
+    opacity: 0;
+  }
+}
+
+.puffCloud {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(0, 0, 0, 0) 70%);
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: puff 1s ease-out forwards;
+}
