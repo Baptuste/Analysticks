@@ -1,4 +1,4 @@
-// Fix Vercel build
+// Fix Vercel build - version propre
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
@@ -12,4 +12,5 @@ root.render(
   </React.StrictMode>
 );
 
+// Pour mesurer les performances de l'app
 reportWebVitals();
