@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Reset de base */
 * {
   margin: 0;
@@ -37,4 +38,18 @@ html {
     opacity: 1;
     transform: translateY(0);
   }
+=======
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+>>>>>>> 21d725322ed87b4dd76bf589532583160b76a8ba
 }
