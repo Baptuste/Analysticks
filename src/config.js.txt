@@ -1,0 +1,5 @@
+const CONFIG = {
+  API_URL: "https://script.google.com/macros/s/AKfyc.../exec", // ton lien ici
+};
+
+export default CONFIG;
