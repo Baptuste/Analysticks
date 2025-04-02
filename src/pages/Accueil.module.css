@@ -1,0 +1,71 @@
+.container {
+    position: relative;
+    height: 100vh;
+    background: #0a0a0a;
+    overflow: hidden;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 40px 20px;
+  }
+  
+  .title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #00ff88;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px #00ff88;
+    opacity: 1;
+  }
+  
+  .logo {
+    width: 380px;
+    height: auto;
+    margin-bottom: 40px;
+    filter: drop-shadow(0 0 10px #00ff88);
+    opacity: 1;
+  }
+  
+  .buttonRow {
+    display: flex;
+    gap: 50px;
+    margin-top: 30px;
+  }
+  
+  .navButtonLeft,
+  .navButtonRight {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background-color: #3a3a3a;
+    color: white;
+    padding: 18px 36px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 50px;
+    border: 1px solid #00ff88;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.25);
+    opacity: 1;
+  }
+  
+  .navButtonLeft:hover,
+  .navButtonRight:hover {
+    background-color: #00ff88;
+    color: black;
+    transform: scale(1.07);
+    box-shadow: 0 0 20px #00ff88;
+  }
+  
