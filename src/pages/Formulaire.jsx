@@ -39,7 +39,7 @@ export default function Formulaire() {
     };
 
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycby4FwoVQl-fwYgKD_mcs-0X_Kzv8NarjDKUEJEcWKtMhkzKj-I-EMADRgzdYoW9h3Up/exec", {
+      await fetch("https://script.google.com/macros/s/AKfycby4FwoVQl-fwYgKD_mcs-0X_Kzv8NarjDKUEJEcWKtMhkzKj-I-EMADRgzdYoW9h3Up/exec", {
         method: "POST",
         mode: "no-cors",
         headers: {
@@ -48,7 +48,6 @@ export default function Formulaire() {
         body: JSON.stringify(data),
       });
 
-      // Note: no-cors mode prevents access to response.ok
       setMessage('✅ Données envoyées !');
       setRepartition('');
       setLongueur('');
