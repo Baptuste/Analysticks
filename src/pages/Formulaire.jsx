@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styles from './Formulaire.module.css';
 import styled from 'styled-components';
+import { Home } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const SpecialButton = styled.button`
   background-color: ${(props) => (props.$active ? '#00ff88' : '#cc0000')};
@@ -21,6 +23,8 @@ export default function Formulaire() {
   const [largeur, setLargeur] = useState('');
   const [message, setMessage] = useState('');
   const [puffVisible, setPuffVisible] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     if (!repartition || !longueur || !largeur) {
@@ -60,8 +64,12 @@ export default function Formulaire() {
 
   return (
     <div className={styles.formulaireContainer}>
+      <button onClick={() => navigate('/')} className={styles.homeButton}>
+        <Home size={24} color="#00ff88" />
+      </button>
+
       <img src="/logo-analysticks.png" alt="Logo Analysticks" className={styles.logoGlow} />
-      <h2>🌿 Analysticks</h2>
+      <h2>Analysticks</h2>
 
       <div className={styles.fieldGroup}>
         <label>Répartition :</label>

@@ -12,20 +12,19 @@ export default function Accueil() {
     <div className={styles.container}>
       <AsteroidBackground />
 
-      <div className={styles.content}>
-        <h1 className={styles.title}>Analysticks</h1>
-        <img src="/logo-analysticks.png" alt="Logo" className={styles.logo} />
-        <div className={styles.buttonRow}>
-          <button className={styles.navButtonLeft} onClick={() => navigate('/stats')}>
-            <ArrowLeft size={20} className={styles.icon} />
-            <span>Statistiques</span>
-          </button>
+      <h1 className={styles.title}>Analysticks</h1>
+      <img src="/logo-analysticks.png" alt="Logo" className={styles.logo} />
 
-          <button className={styles.navButtonRight} onClick={() => navigate('/formulaire')}>
-            <span>Formulaire</span>
-            <ArrowRight size={20} className={styles.icon} />
-          </button>
-        </div>
+      <div className={styles.buttonRow}>
+        <button className={styles.navButtonLeft} onClick={() => navigate('/stats')}>
+          <ArrowLeft size={20} />
+          Statistiques
+        </button>
+
+        <button className={styles.navButtonRight} onClick={() => navigate('/formulaire')}>
+          Formulaire
+          <ArrowRight size={20} />
+        </button>
       </div>
     </div>
   );

@@ -1,81 +1,152 @@
 .asteroidContainer {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    z-index: 0;
-    pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Astéroïde de base */
+.asteroid {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.9;
+  will-change: transform;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  background: white;
+  box-shadow: 0 0 25px 10px #00ffcc;
+}
+
+/* Traînée par défaut */
+.asteroid::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -100%;
+  width: 150%;
+  height: 1px;
+  background: linear-gradient(90deg, #00ffcc, transparent);
+  transform: translateY(-50%);
+  opacity: 0.6;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+/* Astéroïdes spéciaux */
+.special {
+  animation: pulse 1.5s infinite alternate !important;
+  opacity: 1 !important;
+  z-index: 1;
+}
+
+/* Effet pulsation */
+@keyframes pulse {
+  from {
+    transform: scale(1);
+    opacity: 1;
   }
-  
-  /* Base asteroid */
-  .asteroid {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    opacity: 0.9;
-    box-shadow: 0 0 25px 10px #00ffcc;
-    will-change: transform;
-    animation-timing-function: linear;
-    animation-fill-mode: forwards;
-  }
-  
-  /* Traînée d'étoile filante avec pseudo-élément */
-  .asteroid::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: -100%;
-    width: 150%;
-    height: 1px;
-    background: linear-gradient(90deg, #00ffcc, transparent);
-    transform: translateY(-50%);
+  to {
+    transform: scale(1.5);
     opacity: 0.6;
-    filter: blur(4px);
-    pointer-events: none;
   }
-  
-  /* Directions de chute */
-  .fall-down {
-    animation-name: fallDown;
-  }
-  .fall-up {
-    animation-name: fallUp;
-  }
-  .fall-left {
-    animation-name: fallLeft;
-  }
-  .fall-right {
-    animation-name: fallRight;
-  }
-  .fall-diag-1 {
-    animation-name: fallDiag1;
-  }
-  .fall-diag-2 {
-    animation-name: fallDiag2;
-  }
-  
-  /* Keyframes avec virages et oscillations */
-  @keyframes fallDown {
-    0% { transform: translateY(-150vh) rotate(0deg); opacity: 0.2; }
-    100% { transform: translateY(150vh) rotate(360deg); opacity: 1; }
-  }
-  @keyframes fallUp {
-    0% { transform: translateY(150vh) rotate(0deg); opacity: 0.2; }
-    100% { transform: translateY(-150vh) rotate(-360deg); opacity: 1; }
-  }
-  @keyframes fallLeft {
-    0% { transform: translateX(150vw) rotate(0deg); opacity: 0.2; }
-    100% { transform: translateX(-150vw) rotate(-360deg); opacity: 1; }
-  }
-  @keyframes fallRight {
-    0% { transform: translateX(-150vw) rotate(0deg); opacity: 0.2; }
-    100% { transform: translateX(150vw) rotate(360deg); opacity: 1; }
-  }
-  @keyframes fallDiag1 {
-    0% { transform: translate(-150vw, -150vh) rotate(0deg); opacity: 0.2; }
-    100% { transform: translate(150vw, 150vh) rotate(360deg); opacity: 1; }
-  }
-  @keyframes fallDiag2 {
-    0% { transform: translate(150vw, -150vh) rotate(0deg); opacity: 0.2; }
-    100% { transform: translate(-150vw, 150vh) rotate(-360deg); opacity: 1; }
-  }
-  
+}
+
+/* Directions */
+.fall-down    { animation-name: fallDown; }
+.fall-up      { animation-name: fallUp; }
+.fall-left    { animation-name: fallLeft; }
+.fall-right   { animation-name: fallRight; }
+.fall-diag-1  { animation-name: fallDiag1; }
+.fall-diag-2  { animation-name: fallDiag2; }
+
+/* Keyframes */
+@keyframes fallDown {
+  0%   { transform: translateY(-150vh) rotate(0deg); opacity: 0.2; }
+  100% { transform: translateY(150vh) rotate(360deg); opacity: 1; }
+}
+@keyframes fallUp {
+  0%   { transform: translateY(150vh) rotate(0deg); opacity: 0.2; }
+  100% { transform: translateY(-150vh) rotate(-360deg); opacity: 1; }
+}
+@keyframes fallLeft {
+  0%   { transform: translateX(150vw) rotate(0deg); opacity: 0.2; }
+  100% { transform: translateX(-150vw) rotate(-360deg); opacity: 1; }
+}
+@keyframes fallRight {
+  0%   { transform: translateX(-150vw) rotate(0deg); opacity: 0.2; }
+  100% { transform: translateX(150vw) rotate(360deg); opacity: 1; }
+}
+@keyframes fallDiag1 {
+  0%   { transform: translate(-150vw, -150vh) rotate(0deg); opacity: 0.2; }
+  100% { transform: translate(150vw, 150vh) rotate(360deg); opacity: 1; }
+}
+@keyframes fallDiag2 {
+  0%   { transform: translate(150vw, -150vh) rotate(0deg); opacity: 0.2; }
+  100% { transform: translate(-150vw, 150vh) rotate(-360deg); opacity: 1; }
+}
+
+/* 🌈 COULEURS SPÉCIALES */
+.color-magenta {
+  background: #ff4ec4;
+  box-shadow: 0 0 20px 10px #ff4ec4;
+}
+.color-magenta::after {
+  background: linear-gradient(90deg, #ff4ec4, transparent);
+}
+
+.color-cyan {
+  background: #00ccff;
+  box-shadow: 0 0 20px 10px #00ccff;
+}
+.color-cyan::after {
+  background: linear-gradient(90deg, #00ccff, transparent);
+}
+
+.color-yellow {
+  background: #ffcc00;
+  box-shadow: 0 0 20px 10px #ffcc00;
+}
+.color-yellow::after {
+  background: linear-gradient(90deg, #ffcc00, transparent);
+}
+
+.color-green {
+  background: #00ff88;
+  box-shadow: 0 0 20px 10px #00ff88;
+}
+.color-green::after {
+  background: linear-gradient(90deg, #00ff88, transparent);
+}
+
+.color-pink {
+  background: #ff0066;
+  box-shadow: 0 0 20px 10px #ff0066;
+}
+.color-pink::after {
+  background: linear-gradient(90deg, #ff0066, transparent);
+}
+
+.color-orange {
+  background: #ff9900;
+  box-shadow: 0 0 20px 10px #ff9900;
+}
+.color-orange::after {
+  background: linear-gradient(90deg, #ff9900, transparent);
+}
+
+.color-lime {
+  background: #66ff66;
+  box-shadow: 0 0 20px 10px #66ff66;
+}
+.color-lime::after {
+  background: linear-gradient(90deg, #66ff66, transparent);
+}
+
+.color-purple {
+  background: #cc99ff;
+  box-shadow: 0 0 20px 10px #cc99ff;
+}
+.color-purple::after {
+  background: linear-gradient(90deg, #cc99ff, transparent);
+}
