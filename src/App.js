@@ -17,4 +17,4 @@ function App() {
   );
 }
 
-export default Formulaire;
+export default App;
