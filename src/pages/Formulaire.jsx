@@ -40,21 +40,19 @@ export default function Formulaire() {
 
     try {
       const response = await fetch("https://script.google.com/macros/s/AKfycby4FwoVQl-fwYgKD_mcs-0X_Kzv8NarjDKUEJEcWKtMhkzKj-I-EMADRgzdYoW9h3Up/exec", {
-        method: 'POST',
+        method: "POST",
+        mode: "no-cors",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
 
-      if (response.ok) {
-        setMessage('✅ Données envoyées avec succès !');
-        setRepartition('');
-        setLongueur('');
-        setLargeur('');
-      } else {
-        setMessage('❌ Erreur lors de l’envoi.');
-      }
+      // Note: no-cors mode prevents access to response.ok
+      setMessage('✅ Données envoyées !');
+      setRepartition('');
+      setLongueur('');
+      setLargeur('');
     } catch (error) {
       setMessage('❌ Une erreur est survenue.');
       console.error("Erreur :", error);
