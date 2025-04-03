@@ -1,3 +1,4 @@
+/* Formulaire Container */
 .formulaireContainer {
   display: flex;
   flex-direction: column;
@@ -9,14 +10,22 @@
   position: relative;
   font-family: 'Orbitron', sans-serif;
   z-index: 1;
+  overflow-y: auto; /* Permet de faire défiler le contenu tout en maintenant la possibilité de faire défiler */
 }
 
+/* Masquer la barre de défilement mais garder sa capacité */
+.formulaireContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/* Logo glow */
 .logoGlow {
   width: 100px;
   margin-bottom: 10px;
   filter: drop-shadow(0 0 10px #00ff88);
 }
 
+/* Field Group Styles */
 .fieldGroup {
   display: flex;
   flex-direction: column;
@@ -25,30 +34,33 @@
   max-width: 300px;
   position: relative;
   z-index: 2;
-  background: rgba(10, 10, 10, 0.9); /* + opaque */
-  padding: 12px;
+  background: rgba(10, 10, 10, 0.9);
+  padding: 16px 14px;
   border-radius: 12px;
   box-shadow: 0 0 6px rgba(0, 255, 136, 0.2);
 }
 
+/* Labels */
 .fieldGroup label {
   margin-bottom: 5px;
   font-weight: bold;
   color: #00ff88;
 }
 
+/* Select and Input Styles */
 select,
 input {
   padding: 10px;
   border-radius: 10px;
   border: 2px solid #00ff88;
-  background: rgba(26, 26, 26, 0.95); /* + opacité */
+  background: rgba(26, 26, 26, 0.95);
   color: white;
   font-size: 1rem;
   outline: none;
   z-index: 2;
 }
 
+/* Smoke Button Styles */
 .smokeButton {
   margin-top: 20px;
   padding: 14px 32px;
@@ -70,6 +82,7 @@ input {
   box-shadow: 0 0 25px #00ffaa;
 }
 
+/* Puff Cloud Animation */
 .puffCloud {
   width: 120px;
   height: 120px;
@@ -92,6 +105,7 @@ input {
   }
 }
 
+/* Special Button */
 .specialButtonWrapper {
   margin-top: 30px;
   animation-duration: 1s;
@@ -113,6 +127,7 @@ input {
   }
 }
 
+/* Home Button */
 .homeButton {
   position: absolute;
   top: 20px;
@@ -128,4 +143,119 @@ input {
 
 .homeButton:hover {
   background: rgba(0, 255, 136, 0.1);
+}
+
+/* Add Button */
+.addButton {
+  background: #111;
+  border: 2px solid #00ff88;
+  border-radius: 8px;
+  padding: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.addButton:hover {
+  background: #00ff88;
+}
+
+/* Modal Popup Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modalContent {
+  background-color: #111;
+  border: 2px solid #00ff88;
+  padding: 1.5rem;
+  border-radius: 16px;
+  width: 300px;
+  box-shadow: 0 0 20px #00ff88;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: popIn 0.3s ease;
+}
+
+.modalContent h3 {
+  color: #00ff88;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.modalContent input,
+.modalContent select {
+  padding: 12px; /* Augmentation de l'espace de texte */
+  border-radius: 10px;
+  border: 2px solid #00ff88;
+  background-color: #1a1a1a;
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 12px; /* Uniformisation de l'espacement entre les champs */
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.modalButtons button {
+  flex: 1;
+  padding: 12px; /* Ajustement pour correspondre à l'espacement de texte */
+  border-radius: 9999px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modalButtons button:first-child {
+  background-color: #00ff88;
+  color: black;
+  border: none;
+  box-shadow: 0 0 10px #00ff88;
+}
+
+.modalButtons button:first-child:hover {
+  background-color: #00ffaa;
+  box-shadow: 0 0 20px #00ffaa;
+}
+
+.modalButtons button:last-child {
+  background-color: #cc0000;
+  color: white;
+  border: none;
+  box-shadow: 0 0 10px #cc0000;
+}
+
+.modalButtons button:last-child:hover {
+  background-color: #ff3333;
+  box-shadow: 0 0 20px #ff3333;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
