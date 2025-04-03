@@ -90,7 +90,7 @@ export default function Statistiques() {
       </button>
 
       <h1 className={styles.mainTitle}>Statistiques</h1>
-      <p className={styles.counter}>📊 {animatedCount}</p>
+      <p className={styles.counter}> {animatedCount}</p>
 
       <div className={styles.content}>
         <motion.div className={styles.card} variants={fadeSlide} initial="hidden" animate="visible">
