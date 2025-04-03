@@ -6,7 +6,46 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip
 } from 'recharts';
 import { motion } from 'framer-motion';
+import Particles from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
 import styles from './Statistiques.module.css';
+
+const particlesInit = async (main) => {
+  await loadSlim(main);
+};
+
+const particlesOptions = {
+  fullScreen: { enable: true, zIndex: 0 },
+  background: { color: { value: "transparent" } },
+  particles: {
+    number: { value: 80 },
+    color: { value: ["#00ffcc", "#00ffaa", "#88ffee"] },
+    shape: { type: "circle" },
+    opacity: {
+      value: 0.7,
+      anim: { enable: true, speed: 0.3, opacity_min: 0.3, sync: false }
+    },
+    size: {
+      value: 2.5,
+      random: true,
+      anim: { enable: true, speed: 1.5, size_min: 0.5, sync: false }
+    },
+    move: {
+      enable: true,
+      speed: 0.5,
+      direction: "none",
+      outModes: { default: "bounce" }
+    },
+    twinkle: {
+      particles: {
+        enable: true,
+        color: "#00ffcc",
+        frequency: 0.1,
+        opacity: 1
+      }
+    }
+  }
+};
 
 export default function Statistiques() {
   const navigate = useNavigate();
@@ -81,9 +120,7 @@ export default function Statistiques() {
 
   return (
     <div className={styles.container}>
-      <video autoPlay loop muted playsInline className={styles.videoBackground}>
-        <source src="/kekra-loop-processed.mp4" type="video/mp4" />
-      </video>
+      <Particles id="stars" init={particlesInit} options={particlesOptions} className={styles.particles} />
 
       <button className={styles.homeButton} onClick={() => navigate('/')} aria-label="Retour à l'accueil">
         <Home size={28} color="#00ff88" />

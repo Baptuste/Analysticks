@@ -8,6 +8,7 @@
   padding-top: 80px;
   position: relative;
   font-family: 'Orbitron', sans-serif;
+  z-index: 1;
 }
 
 .logoGlow {
@@ -22,6 +23,12 @@
   margin: 20px 0;
   width: 80%;
   max-width: 300px;
+  position: relative;
+  z-index: 2;
+  background: rgba(10, 10, 10, 0.9); /* + opaque */
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 0 6px rgba(0, 255, 136, 0.2);
 }
 
 .fieldGroup label {
@@ -35,10 +42,11 @@ input {
   padding: 10px;
   border-radius: 10px;
   border: 2px solid #00ff88;
-  background: #1a1a1a;
+  background: rgba(26, 26, 26, 0.95); /* + opacité */
   color: white;
   font-size: 1rem;
   outline: none;
+  z-index: 2;
 }
 
 .smokeButton {
@@ -53,6 +61,7 @@ input {
   box-shadow: 0 0 15px #00ff88;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   font-size: 1.1rem;
+  z-index: 2;
 }
 
 .smokeButton:hover {
@@ -69,6 +78,7 @@ input {
   bottom: 100px;
   animation: puff 1.2s ease-out forwards;
   pointer-events: none;
+  z-index: 2;
 }
 
 @keyframes puff {
@@ -85,6 +95,7 @@ input {
 .specialButtonWrapper {
   margin-top: 30px;
   animation-duration: 1s;
+  z-index: 2;
 }
 
 .bounce {
@@ -102,7 +113,6 @@ input {
   }
 }
 
-/* 🏠 Bouton Home en haut à gauche */
 .homeButton {
   position: absolute;
   top: 20px;

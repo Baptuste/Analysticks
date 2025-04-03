@@ -3,6 +3,8 @@ import styles from './Formulaire.module.css';
 import styled from 'styled-components';
 import { Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Particles from 'react-tsparticles';
+import { loadSlim } from 'tsparticles-slim';
 
 const SpecialButton = styled.button`
   background-color: ${(props) => (props.$active ? '#00ff88' : '#cc0000')};
@@ -15,6 +17,43 @@ const SpecialButton = styled.button`
   cursor: pointer;
   transition: all 0.3s ease;
 `;
+
+const particlesInit = async (main) => {
+  await loadSlim(main);
+};
+
+const particlesOptions = {
+  fullScreen: { enable: true, zIndex: 0 },
+  background: { color: { value: 'transparent' } },
+  particles: {
+    number: { value: 60 },
+    color: { value: '#00ffcc' },
+    shape: { type: 'circle' },
+    opacity: {
+      value: 0.6,
+      anim: { enable: true, speed: 0.3, opacity_min: 0.2, sync: false }
+    },
+    size: {
+      value: 2.5,
+      random: true,
+      anim: { enable: true, speed: 2, size_min: 0.5, sync: false }
+    },
+    move: {
+      enable: true,
+      speed: 0.5,
+      direction: 'none',
+      outModes: { default: 'bounce' }
+    },
+    twinkle: {
+      particles: {
+        enable: true,
+        color: '#00ffcc',
+        frequency: 0.1,
+        opacity: 1
+      }
+    }
+  }
+};
 
 export default function Formulaire() {
   const [modeSpecial, setModeSpecial] = useState(false);
@@ -64,6 +103,8 @@ export default function Formulaire() {
 
   return (
     <div className={styles.formulaireContainer}>
+      <Particles id="tsparticles" init={particlesInit} options={particlesOptions} className={styles.particles} />
+
       <button onClick={() => navigate('/')} className={styles.homeButton}>
         <Home size={24} color="#00ff88" />
       </button>
