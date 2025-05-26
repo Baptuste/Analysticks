@@ -1,31 +1,111 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import styled from 'styled-components';
 
 import AsteroidBackground from '../components/AsteroidBackground.jsx';
 import styles from './Accueil.module.css';
+
+const MobileContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+`;
+
+const Logo = styled.img`
+  width: 80%;
+  max-width: 300px;
+  height: auto;
+  margin: 2rem 0;
+  
+  @media (max-width: 768px) {
+    width: 70%;
+    margin: 1.5rem 0;
+  }
+`;
+
+const Title = styled.h1`
+  font-size: 3rem;
+  color: #00ff88;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+  margin: 0;
+  text-align: center;
+  
+  @media (max-width: 768px) {
+    font-size: 2.2rem;
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+    gap: 0.8rem;
+  }
+`;
+
+const NavButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1.5rem;
+  border: 2px solid #00ff88;
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 160px;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  &:hover {
+    background: rgba(0, 255, 136, 0.2);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
 
 export default function Accueil() {
   const navigate = useNavigate();
 
   return (
-    <div className={styles.container}>
+    <MobileContainer>
       <AsteroidBackground />
 
-      <h1 className={styles.title}>Analysticks</h1>
-      <img src="/logo-analysticks.png" alt="Logo" className={styles.logo} />
+      <Title>Analysticks</Title>
+      <Logo src="/logo-analysticks.png" alt="Logo" />
 
-      <div className={styles.buttonRow}>
-        <button className={styles.navButtonLeft} onClick={() => navigate('/stats')}>
+      <ButtonContainer>
+        <NavButton onClick={() => navigate('/stats')}>
           <ArrowLeft size={20} />
           Statistiques
-        </button>
+        </NavButton>
 
-        <button className={styles.navButtonRight} onClick={() => navigate('/formulaire')}>
+        <NavButton onClick={() => navigate('/formulaire')}>
           Formulaire
           <ArrowRight size={20} />
-        </button>
-      </div>
-    </div>
+        </NavButton>
+      </ButtonContainer>
+    </MobileContainer>
   );
 }

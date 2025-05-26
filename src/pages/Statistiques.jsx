@@ -64,14 +64,25 @@ const WeeklyConsumptionContainer = styled.div`
   max-width: 1200px;
 
   @media (max-width: 768px) {
+    height: 300px;
+    padding: 0.5rem;
     margin: 0.5rem;
-    height: 350px;
-    width: calc(100% - 1rem);
-    padding: 0.75rem;
-
+    
     h2 {
-      font-size: 1.1rem;
+      font-size: 1rem;
       margin-bottom: 0.5rem;
+    }
+
+    .stats-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+      
+      .stats-info {
+        font-size: 0.8rem;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
     }
   }
 `;
@@ -87,10 +98,9 @@ const KPIContainer = styled.div`
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, auto);
-    gap: 0.5rem;
-    margin: 0.5rem;
-    width: calc(100% - 1rem);
+    gap: 0.8rem;
+    margin: 0.8rem;
+    width: calc(100% - 1.6rem);
   }
 `;
 
@@ -107,7 +117,7 @@ const KPICard = styled.div`
 
   @media (max-width: 768px) {
     padding: 1rem;
-    min-height: 170px;
+    min-height: 160px;
   }
 
   &:hover {
@@ -117,8 +127,12 @@ const KPICard = styled.div`
 
 const KPIHeader = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 1.5rem;
+
+  @media (max-width: 768px) {
+    margin-bottom: 1rem;
+  }
 `;
 
 const KPIIcon = styled.div`
@@ -144,17 +158,6 @@ const KPIContent = styled.div`
   flex-direction: column;
 `;
 
-const KPIValue = styled.div`
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #00ff88;
-  margin: 0.5rem 0;
-
-  @media (max-width: 768px) {
-    font-size: 1.4rem;
-  }
-`;
-
 const KPILabel = styled.div`
   color: #fff;
   font-size: 1rem;
@@ -163,6 +166,19 @@ const KPILabel = styled.div`
 
   @media (max-width: 768px) {
     font-size: 0.9rem;
+  }
+`;
+
+const KPIValue = styled.div`
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #00ff88;
+  margin: 0.5rem 0;
+  word-break: break-word;
+
+  @media (max-width: 768px) {
+    font-size: 1.4rem;
+    margin: 0.3rem 0;
   }
 `;
 
@@ -175,9 +191,26 @@ const ChartContainer = styled.div`
   align-items: center;
   justify-content: center;
 
+  @media (max-width: 768px) {
+    margin: 0.25rem;
+    min-height: 80px;
+  }
+
   .recharts-wrapper {
     position: relative;
     width: 100% !important;
+  }
+
+  .recharts-text {
+    @media (max-width: 768px) {
+      font-size: 0.7rem !important;
+    }
+  }
+
+  .recharts-cartesian-axis-tick-value {
+    @media (max-width: 768px) {
+      font-size: 0.65rem;
+    }
   }
 `;
 
@@ -203,7 +236,7 @@ const CHART_GRADIENTS = {
   ]
 };
 
-// Palette de couleurs étendue pour les éléments des graphiques
+// Palette de couleurs pour les éléments
 const ELEMENT_COLORS = {
   types: {
     'Beuh': '#4CAF50',
@@ -240,68 +273,43 @@ const ELEMENT_COLORS = {
   }
 };
 
-// Palette de couleurs étendue pour les variétés individuelles
-const VARIETE_COLORS = [
-  '#FF6B6B', // Rouge corail
-  '#4ECDC4', // Turquoise
-  '#45B7D1', // Bleu ciel
-  '#96CEB4', // Vert menthe
-  '#FFEEAD', // Jaune pâle
-  '#D4A5A5', // Rose poudré
-  '#9A8194', // Violet pâle
-  '#392F5A', // Violet foncé
-  '#31A9B8', // Bleu-vert
-  '#FF9F1C', // Orange
-  '#2EC4B6', // Turquoise vif
-  '#E71D36', // Rouge vif
-  '#FF9F1C', // Orange doré
-  '#8093F1', // Bleu lavande
-  '#72DDF7', // Bleu clair
-];
-
 const CustomTooltip = styled.div`
   background: rgba(17, 17, 17, 0.95);
   border: 1px solid ${CHART_COLORS.primary};
   border-radius: 8px;
   padding: 12px;
   box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+  max-width: 90vw;
+
+  @media (max-width: 768px) {
+    padding: 8px;
+    font-size: 0.8rem;
+    
+    .tooltip-title {
+      font-size: 0.85rem;
+    }
+    
+    .tooltip-content {
+      font-size: 0.8rem;
+    }
+  }
 
   .tooltip-title {
     color: ${CHART_COLORS.primary};
     font-weight: bold;
     margin-bottom: 8px;
-    font-size: 0.9rem;
   }
 
   .tooltip-content {
     color: #fff;
-    font-size: 0.85rem;
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
-
-  .tooltip-value {
-    color: ${CHART_COLORS.secondary};
-    font-weight: bold;
-  }
-
-  .tooltip-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .color-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    display: inline-block;
-  }
 `;
 
 // Composant de tooltip personnalisé pour les graphiques
-const renderCustomTooltip = ({ active, payload, label, type }, varietesData = []) => {
+const renderCustomTooltip = ({ active, payload, label, type }) => {
   if (!active || !payload || !payload.length) return null;
 
   let title = '';
@@ -313,10 +321,6 @@ const renderCustomTooltip = ({ active, payload, label, type }, varietesData = []
       content = (
         <>
           <div className="tooltip-label">
-            <span 
-              className="color-dot" 
-              style={{ background: ELEMENT_COLORS.types[payload[0].payload.name] || CHART_COLORS.accent1 }} 
-            />
             <span>{payload[0].payload.name}</span>
           </div>
           <div>Quantité : <span className="tooltip-value">{payload[0].value}</span></div>
@@ -329,10 +333,6 @@ const renderCustomTooltip = ({ active, payload, label, type }, varietesData = []
       content = (
         <>
           <div className="tooltip-label">
-            <span 
-              className="color-dot" 
-              style={{ background: ELEMENT_COLORS.repartitions[payload[0].payload.name] || CHART_COLORS.accent2 }} 
-            />
             <span>{payload[0].payload.name}</span>
           </div>
           <div>Quantité : <span className="tooltip-value">{payload[0].value}</span></div>
@@ -340,35 +340,46 @@ const renderCustomTooltip = ({ active, payload, label, type }, varietesData = []
       );
       break;
 
-    case 'varietes':
-      const index = varietesData.findIndex(v => v.name === payload[0].payload.name);
-      title = 'Variété';
+    case 'longueur':
+      title = 'Longueur';
       content = (
         <>
           <div className="tooltip-label">
-            <span 
-              className="color-dot" 
-              style={{ background: VARIETE_COLORS[index % VARIETE_COLORS.length] }}
-            />
             <span>{payload[0].payload.name}</span>
           </div>
-          <div>Type : <span className="tooltip-value">{payload[0].payload.type}</span></div>
+          <div>Quantité : <span className="tooltip-value">{payload[0].value}</span></div>
+        </>
+      );
+      break;
+
+    case 'largeur':
+      title = 'Largeur';
+      content = (
+        <>
+          <div className="tooltip-label">
+            <span>{payload[0].payload.name}</span>
+          </div>
           <div>Quantité : <span className="tooltip-value">{payload[0].value}</span></div>
         </>
       );
       break;
 
     case 'weekly':
-      title = payload[0].payload.fullDate;
+      title = payload[0].payload.fullDate || label;
       content = (
         <>
-          <div>Nombre de sticks : <span className="tooltip-value">{payload[0].payload.y}</span></div>
+          <div>Nombre de sticks : <span className="tooltip-value">{payload[0].value}</span></div>
         </>
       );
       break;
 
     default:
-      return null;
+      title = label;
+      content = (
+        <>
+          <div>Quantité : {payload[0].value}</div>
+        </>
+      );
   }
 
   return (
@@ -386,7 +397,8 @@ export default function Statistiques() {
   const [weeklyData, setWeeklyData] = useState([]);
   const [typesData, setTypesData] = useState([]);
   const [repartitionData, setRepartitionData] = useState([]);
-  const [varietesData, setVarietesData] = useState([]);
+  const [longueursData, setLongueursData] = useState([]);
+  const [largeursData, setLargeursData] = useState([]);
   const [kpis, setKpis] = useState({
     total: 0,
     moyenneHebdo: 0,
@@ -401,7 +413,7 @@ export default function Statistiques() {
       try {
         const entries = await supabaseHelper.getAllEntries();
         
-        // Grouper les données par jour mais afficher uniquement le mois
+        // Grouper les données par jour
         const dailyConsumption = entries.reduce((acc, entry) => {
           const date = new Date(entry.timestamp);
           const monthName = new Intl.DateTimeFormat('fr-FR', { 
@@ -417,7 +429,7 @@ export default function Statistiques() {
               x: monthName.charAt(0).toUpperCase() + monthName.slice(1),
               y: 0,
               timestamp: date,
-              monthKey // Ajout de la clé du mois
+              monthKey
             };
           }
           
@@ -430,12 +442,11 @@ export default function Statistiques() {
         const processedDailyData = Object.values(dailyConsumption)
           .sort((a, b) => a.timestamp - b.timestamp)
           .map((item, index, array) => {
-            // Vérifier si c'est la première occurrence du mois
             const isFirstOfMonth = index === 0 || 
               item.monthKey !== array[index - 1].monthKey;
             
             return { 
-              x: isFirstOfMonth ? item.x : '',  // N'afficher le mois que pour la première occurrence
+              x: isFirstOfMonth ? item.x : '',
               y: item.y,
               value: item.count,
               fullDate: item.day,
@@ -455,12 +466,10 @@ export default function Statistiques() {
 
         const processedTypesData = Object.values(typeCount)
           .sort((a, b) => b.count - a.count)
-          .map((item, index) => ({ 
-            index, 
-            value: item.count,
-            name: item.type 
-          }))
-          .slice(0, 5);
+          .map(item => ({ 
+            name: item.type,
+            value: item.count
+          }));
 
         // Traitement des données par répartition
         const repartitionCount = entries.reduce((acc, entry) => {
@@ -473,36 +482,49 @@ export default function Statistiques() {
 
         const processedRepartitionData = Object.values(repartitionCount)
           .sort((a, b) => b.count - a.count)
-          .map((item, index) => ({
-            index,
-            value: item.count,
-            name: item.name
+          .map(item => ({
+            name: item.name,
+            value: item.count
           }));
 
-        // Traitement des données par variété
-        const varieteCount = entries.reduce((acc, entry) => {
-          const nom = entry.variete?.nom || 'Inconnue';
-          if (!acc[nom]) {
-            acc[nom] = { name: nom, count: 0 };
+        // Traitement des données par longueur
+        const longueurCount = entries.reduce((acc, entry) => {
+          if (!acc[entry.longueur]) {
+            acc[entry.longueur] = { name: entry.longueur, count: 0 };
           }
-          acc[nom].count += 1;
+          acc[entry.longueur].count += 1;
           return acc;
         }, {});
 
-        const processedVarietesData = Object.values(varieteCount)
+        const processedLongueursData = Object.values(longueurCount)
           .sort((a, b) => b.count - a.count)
-          .map((item, index) => ({
-            index,
-            value: item.count,
-            name: item.name
-          }))
-          .slice(0, 5);
+          .map(item => ({
+            name: item.name,
+            value: item.count
+          }));
+
+        // Traitement des données par largeur
+        const largeurCount = entries.reduce((acc, entry) => {
+          if (!acc[entry.largeur]) {
+            acc[entry.largeur] = { name: entry.largeur, count: 0 };
+          }
+          acc[entry.largeur].count += 1;
+          return acc;
+        }, {});
+
+        const processedLargeursData = Object.values(largeurCount)
+          .sort((a, b) => b.count - a.count)
+          .map(item => ({
+            name: item.name,
+            value: item.count
+          }));
 
         // Mise à jour des états
         setWeeklyData(processedDailyData);
         setTypesData(processedTypesData);
         setRepartitionData(processedRepartitionData);
-        setVarietesData(processedVarietesData);
+        setLongueursData(processedLongueursData);
+        setLargeursData(processedLargeursData);
 
         // Calcul des KPIs
         const total = entries.length;
@@ -516,8 +538,7 @@ export default function Statistiques() {
           moyenneHebdo,
           tendance,
           typePopulaire: processedTypesData[0]?.name || 'Inconnu',
-          repartitionPopulaire: processedRepartitionData[0]?.name || 'Inconnue',
-          varietePopulaire: processedVarietesData[0]?.name || 'Inconnue'
+          repartitionPopulaire: processedRepartitionData[0]?.name || 'Inconnue'
         });
 
         setError('');
@@ -532,15 +553,40 @@ export default function Statistiques() {
     fetchData();
   }, []);
 
-  if (loading) return <div className={styles.container}>Chargement des statistiques...</div>;
-  if (error) return <div className={styles.container}>Erreur : {error}</div>;
+  if (loading) return (
+    <div className={styles.container}>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        color: '#00ff88'
+      }}>
+        Chargement des statistiques...
+      </div>
+    </div>
+  );
+
+  if (error) return (
+    <div className={styles.container}>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        color: '#ff5555'
+      }}>
+        Erreur : {error}
+      </div>
+    </div>
+  );
 
   return (
     <div className={styles.container}>
       <Particles id="stars" init={particlesInit} options={particlesOptions} className={styles.particles} />
 
       <button className={styles.homeButton} onClick={() => navigate('/')} aria-label="Retour à l'accueil">
-        <Home size={28} color="#00ff88" />
+        <Home size={24} color="#00ff88" />
       </button>
 
       <h1 className={styles.mainTitle}>Statistiques</h1>
@@ -553,48 +599,88 @@ export default function Statistiques() {
             </KPIIcon>
             <KPIContent>
               <KPILabel>Total des sticks</KPILabel>
-              <KPIValue>{kpis.total}</KPIValue>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'baseline',
+                gap: '1rem',
+                flexWrap: 'wrap'
+              }}>
+                <KPIValue>{kpis.total}</KPIValue>
+                <div style={{ 
+                  fontSize: '0.9rem', 
+                  color: '#fff', 
+                  opacity: 0.8 
+                }}>
+                  Dernier mois
+                </div>
+              </div>
             </KPIContent>
           </KPIHeader>
           <ChartContainer>
             <ResponsiveContainer width="100%" height={80}>
-              <AreaChart 
-                data={weeklyData} 
-                margin={{ top: 5, right: 5, bottom: 20, left: 5 }}
+              <LineChart 
+                data={weeklyData.slice(-30)} 
+                margin={{ 
+                  top: 5, 
+                  right: window.innerWidth <= 768 ? 5 : 10, 
+                  bottom: 5, 
+                  left: window.innerWidth <= 768 ? 5 : 10 
+                }}
               >
                 <defs>
-                  <linearGradient id="gradientPrimary" x1="0" y1="0" x2="0" y2="1">
-                    {CHART_GRADIENTS.primary.map((stop, index) => (
-                      <stop key={index} offset={stop.offset} stopColor={stop.color} />
-                    ))}
+                  <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={CHART_COLORS.primary} stopOpacity={0.2}/>
+                    <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <XAxis 
-                  dataKey="x"
-                  tick={{ fill: '#fff', fontSize: 10, angle: -45, textAnchor: 'end' }}
-                  height={40}
-                  interval={1}
-                />
-                <YAxis 
-                  tick={{ fill: '#fff', fontSize: 10 }}
-                  width={25}
-                />
                 <Tooltip 
-                  content={(props) => renderCustomTooltip({ ...props, type: 'weekly' }, varietesData)}
+                  content={(props) => renderCustomTooltip({ ...props, type: 'weekly' })}
+                  cursor={{ stroke: CHART_COLORS.primary, strokeWidth: 1 }}
                 />
                 <Area
                   type="monotone"
                   dataKey="y"
-                  stroke={CHART_COLORS.primary}
-                  fill="url(#gradientPrimary)"
-                  strokeWidth={2}
-                  dot={{ fill: CHART_COLORS.primary, r: 3 }}
-                  activeDot={{ r: 5, fill: CHART_COLORS.secondary }}
-                  isAnimationActive={true}
+                  stroke="none"
+                  fillOpacity={1}
+                  fill="url(#colorTotal)"
                 />
-              </AreaChart>
+                <Line
+                  type="monotone"
+                  dataKey="y"
+                  stroke={CHART_COLORS.primary}
+                  strokeWidth={window.innerWidth <= 768 ? 1.5 : 2}
+                  dot={{ 
+                    fill: CHART_COLORS.primary, 
+                    r: window.innerWidth <= 768 ? 2 : 3,
+                    strokeWidth: 1,
+                    stroke: '#fff'
+                  }}
+                  activeDot={{
+                    r: window.innerWidth <= 768 ? 4 : 6,
+                    fill: CHART_COLORS.secondary,
+                    stroke: '#fff',
+                    strokeWidth: 2
+                  }}
+                />
+              </LineChart>
             </ResponsiveContainer>
           </ChartContainer>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.8rem',
+            color: '#fff',
+            opacity: 0.8,
+            padding: '0 0.5rem',
+            marginTop: '0.5rem'
+          }}>
+            <div>
+              Max: {Math.max(...weeklyData.slice(-30).map(d => d.y))}
+            </div>
+            <div>
+              Moy: {Math.round(weeklyData.slice(-30).reduce((acc, curr) => acc + curr.y, 0) / Math.min(30, weeklyData.slice(-30).length))}
+            </div>
+          </div>
         </KPICard>
 
         <KPICard>
@@ -609,21 +695,25 @@ export default function Statistiques() {
           </KPIHeader>
           <ChartContainer>
             <ResponsiveContainer width="100%" height={80}>
-              <BarChart data={typesData} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
-                <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'types' }, varietesData)} />
-                <Bar 
+              <PieChart>
+                <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'types' })} />
+                <Pie
+                  data={typesData}
                   dataKey="value"
-                  radius={[4, 4, 0, 0]}
-                  maxBarSize={30}
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={15}
+                  outerRadius={30}
                 >
                   {typesData.map((entry, index) => (
                     <Cell 
-                      key={`cell-${index}`} 
+                      key={`cell-${index}`}
                       fill={ELEMENT_COLORS.types[entry.name] || CHART_COLORS.accent1}
                     />
                   ))}
-                </Bar>
-              </BarChart>
+                </Pie>
+              </PieChart>
             </ResponsiveContainer>
           </ChartContainer>
         </KPICard>
@@ -639,22 +729,21 @@ export default function Statistiques() {
             </KPIContent>
           </KPIHeader>
           <ChartContainer>
-            <ResponsiveContainer width="100%" height={100}>
-              <PieChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
-                <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'repartition' }, varietesData)} />
+            <ResponsiveContainer width="100%" height={80}>
+              <PieChart>
+                <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'repartition' })} />
                 <Pie
                   data={repartitionData}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  innerRadius="45%"
-                  outerRadius="80%"
-                  paddingAngle={2}
+                  innerRadius={15}
+                  outerRadius={30}
                 >
                   {repartitionData.map((entry, index) => (
                     <Cell 
-                      key={`cell-${index}`} 
+                      key={`cell-${index}`}
                       fill={ELEMENT_COLORS.repartitions[entry.name] || CHART_COLORS.accent2}
                     />
                   ))}
@@ -670,42 +759,97 @@ export default function Statistiques() {
               <ArrowUp size={20} />
             </KPIIcon>
             <KPIContent>
-              <KPILabel>Variété préférée</KPILabel>
-              <KPIValue>{kpis.varietePopulaire}</KPIValue>
+              <KPILabel>Dimensions</KPILabel>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between',
+                gap: window.innerWidth <= 768 ? '0.5rem' : '1rem',
+                marginTop: window.innerWidth <= 768 ? '0.3rem' : '0.5rem',
+                flexWrap: 'wrap'
+              }}>
+                <div>
+                  <div style={{ fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.8rem', opacity: 0.8 }}>Longueur</div>
+                  <KPIValue style={{ fontSize: window.innerWidth <= 768 ? '1rem' : '1.2rem' }}>{longueursData[0]?.name || '-'}</KPIValue>
+                </div>
+                <div>
+                  <div style={{ fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.8rem', opacity: 0.8 }}>Largeur</div>
+                  <KPIValue style={{ fontSize: window.innerWidth <= 768 ? '1rem' : '1.2rem' }}>{largeursData[0]?.name || '-'}</KPIValue>
+                </div>
+              </div>
             </KPIContent>
           </KPIHeader>
-          <ChartContainer>
-            <ResponsiveContainer width="100%" height={80}>
-              <BarChart 
-                data={varietesData.slice(0, 3)} 
-                layout="vertical" 
-                margin={{ top: 5, right: 10, bottom: 5, left: 10 }}
-              >
-                <XAxis type="number" hide />
-                <YAxis type="category" dataKey="name" hide />
-                <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'varietes' }, varietesData)} />
-                <Bar 
+          <ChartContainer style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between',
+            gap: window.innerWidth <= 768 ? '0.5rem' : '1rem'
+          }}>
+            <ResponsiveContainer width="48%" height={window.innerWidth <= 768 ? 60 : 80}>
+              <PieChart>
+                <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'longueur' })} />
+                <Pie
+                  data={longueursData}
                   dataKey="value"
-                  maxBarSize={20}
-                  radius={[0, 4, 4, 0]}
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={window.innerWidth <= 768 ? 12 : 15}
+                  outerRadius={window.innerWidth <= 768 ? 24 : 30}
                 >
-                  {varietesData.slice(0, 3).map((entry, index) => (
+                  {longueursData.map((entry, index) => (
                     <Cell 
-                      key={`cell-${index}`} 
-                      fill={VARIETE_COLORS[index % VARIETE_COLORS.length]}
+                      key={`cell-${index}`}
+                      fill={ELEMENT_COLORS.longueurs[entry.name] || CHART_COLORS.accent3}
                     />
                   ))}
-                </Bar>
-              </BarChart>
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+            <ResponsiveContainer width="48%" height={window.innerWidth <= 768 ? 60 : 80}>
+              <PieChart>
+                <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'largeur' })} />
+                <Pie
+                  data={largeursData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={window.innerWidth <= 768 ? 12 : 15}
+                  outerRadius={window.innerWidth <= 768 ? 24 : 30}
+                >
+                  {largeursData.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`}
+                      fill={ELEMENT_COLORS.largeurs[entry.name] || CHART_COLORS.accent4}
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
             </ResponsiveContainer>
           </ChartContainer>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.8rem',
+            color: '#fff',
+            opacity: 0.8,
+            padding: '0 1rem',
+            marginTop: window.innerWidth <= 768 ? '0.3rem' : '0.5rem'
+          }}>
+            <div>Longueur</div>
+            <div>Largeur</div>
+          </div>
         </KPICard>
       </KPIContainer>
 
       <WeeklyConsumptionContainer>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <div className="stats-header" style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          marginBottom: '1rem'
+        }}>
           <h2 style={{ color: CHART_COLORS.primary }}>Évolution de la Consommation</h2>
-          <div style={{ display: 'flex', gap: '2rem', color: '#fff' }}>
+          <div className="stats-info" style={{ display: 'flex', gap: '2rem', color: '#fff' }}>
             <div>
               <span style={{ color: CHART_COLORS.primary }}>Maximum : </span>
               {Math.max(...weeklyData.map(d => d.y))} sticks
@@ -721,67 +865,51 @@ export default function Statistiques() {
             data={weeklyData}
             margin={{
               top: 20,
-              right: 30,
-              bottom: 60,
-              left: 30
+              right: window.innerWidth <= 768 ? 10 : 30,
+              bottom: window.innerWidth <= 768 ? 40 : 60,
+              left: window.innerWidth <= 768 ? 20 : 30
             }}
           >
-            <defs>
-              <linearGradient id="colorQuantity" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={CHART_COLORS.primary} stopOpacity={0.3}/>
-                <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0}/>
-              </linearGradient>
-            </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
             <XAxis
               dataKey="x"
-              tick={{ fill: '#fff', angle: 0, textAnchor: 'middle' }}
-              height={40}
-              interval={0}
-              padding={{ left: 30, right: 30 }}
-              label={{
-                value: 'Mois',
-                position: 'bottom',
-                fill: '#fff',
-                offset: 20
+              tick={{ 
+                fill: '#fff', 
+                fontSize: window.innerWidth <= 768 ? 10 : 12,
+                angle: window.innerWidth <= 768 ? -45 : 0,
+                textAnchor: window.innerWidth <= 768 ? 'end' : 'middle'
               }}
+              height={window.innerWidth <= 768 ? 60 : 40}
+              interval={window.innerWidth <= 768 ? 1 : 0}
             />
             <YAxis
-              tick={{ fill: '#fff' }}
-              label={{
-                value: 'Nombre de sticks',
-                angle: -90,
-                position: 'insideLeft',
+              tick={{ 
                 fill: '#fff',
-                offset: 10
+                fontSize: window.innerWidth <= 768 ? 10 : 12
               }}
-              domain={[0, 'dataMax + 2']}
-              allowDataOverflow={false}
+              width={window.innerWidth <= 768 ? 35 : 45}
             />
-            <Tooltip
-              content={(props) => renderCustomTooltip({ ...props, type: 'weekly' }, varietesData)}
+            <Tooltip 
+              content={(props) => renderCustomTooltip({ ...props, type: 'weekly' })}
               cursor={{ stroke: CHART_COLORS.primary, strokeWidth: 1 }}
-            />
-            <Area
-              type="monotone"
-              dataKey="y"
-              stroke="none"
-              fillOpacity={1}
-              fill="url(#colorQuantity)"
             />
             <Line
               type="monotone"
               dataKey="y"
               stroke={CHART_COLORS.primary}
-              strokeWidth={3}
-              dot={{ fill: CHART_COLORS.primary, r: 5, strokeWidth: 2, stroke: '#fff' }}
+              strokeWidth={window.innerWidth <= 768 ? 2 : 3}
+              dot={{ 
+                fill: CHART_COLORS.primary, 
+                r: window.innerWidth <= 768 ? 3 : 5,
+                strokeWidth: 2,
+                stroke: '#fff'
+              }}
               activeDot={{
-                r: 8,
+                r: window.innerWidth <= 768 ? 6 : 8,
                 fill: CHART_COLORS.secondary,
                 stroke: '#fff',
                 strokeWidth: 2
               }}
-              connectNulls={true}
             />
           </LineChart>
         </ResponsiveContainer>
