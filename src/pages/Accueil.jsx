@@ -2,9 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import styled from 'styled-components';
-
 import AsteroidBackground from '../components/AsteroidBackground.jsx';
-import styles from './Accueil.module.css';
 
 const MobileContainer = styled.div`
   display: flex;
@@ -12,9 +10,33 @@ const MobileContainer = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
   padding: 1rem;
   position: relative;
   overflow: hidden;
+  background: #111;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+    height: 100dvh;
+  }
+`;
+
+const ContentWrapper = styled.div`
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `;
 
 const Logo = styled.img`
@@ -45,10 +67,12 @@ const ButtonContainer = styled.div`
   display: flex;
   gap: 1rem;
   margin-top: 2rem;
+  width: 100%;
+  justify-content: center;
   
   @media (max-width: 768px) {
     flex-direction: column;
-    width: 100%;
+    align-items: stretch;
     max-width: 300px;
     gap: 0.8rem;
   }
@@ -73,6 +97,7 @@ const NavButton = styled.button`
     width: 100%;
     padding: 1rem;
     font-size: 1rem;
+    min-width: unset;
   }
 
   &:hover {
@@ -91,21 +116,23 @@ export default function Accueil() {
   return (
     <MobileContainer>
       <AsteroidBackground />
+      
+      <ContentWrapper>
+        <Title>Analysticks</Title>
+        <Logo src="/logo-analysticks.png" alt="Logo" />
 
-      <Title>Analysticks</Title>
-      <Logo src="/logo-analysticks.png" alt="Logo" />
+        <ButtonContainer>
+          <NavButton onClick={() => navigate('/stats')}>
+            <ArrowLeft size={20} />
+            Statistiques
+          </NavButton>
 
-      <ButtonContainer>
-        <NavButton onClick={() => navigate('/stats')}>
-          <ArrowLeft size={20} />
-          Statistiques
-        </NavButton>
-
-        <NavButton onClick={() => navigate('/formulaire')}>
-          Formulaire
-          <ArrowRight size={20} />
-        </NavButton>
-      </ButtonContainer>
+          <NavButton onClick={() => navigate('/formulaire')}>
+            Formulaire
+            <ArrowRight size={20} />
+          </NavButton>
+        </ButtonContainer>
+      </ContentWrapper>
     </MobileContainer>
   );
 }

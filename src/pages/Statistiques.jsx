@@ -53,40 +53,6 @@ const particlesOptions = {
   }
 };
 
-const WeeklyConsumptionContainer = styled.div`
-  background: #222;
-  border-radius: 10px;
-  padding: 1rem;
-  margin: 1rem auto;
-  border: 1px solid #00ff88;
-  height: 400px;
-  width: calc(100% - 2rem);
-  max-width: 1200px;
-
-  @media (max-width: 768px) {
-    height: 300px;
-    padding: 0.5rem;
-    margin: 0.5rem;
-    
-    h2 {
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .stats-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-      
-      .stats-info {
-        font-size: 0.8rem;
-        flex-direction: column;
-        gap: 0.3rem;
-      }
-    }
-  }
-`;
-
 const KPIContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -194,6 +160,30 @@ const ChartContainer = styled.div`
   @media (max-width: 768px) {
     margin: 0.25rem;
     min-height: 80px;
+    
+    .recharts-legend-wrapper {
+      position: relative !important;
+      width: 100% !important;
+      height: auto !important;
+      left: 0 !important;
+      bottom: -10px !important;
+      display: flex;
+      justify-content: center;
+      
+      .recharts-default-legend {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        padding: 4px;
+        
+        .recharts-legend-item {
+          margin: 0 !important;
+          padding: 2px 4px !important;
+          font-size: 0.7rem !important;
+        }
+      }
+    }
   }
 
   .recharts-wrapper {
@@ -211,6 +201,15 @@ const ChartContainer = styled.div`
     @media (max-width: 768px) {
       font-size: 0.65rem;
     }
+  }
+  
+  .recharts-cartesian-grid-horizontal line,
+  .recharts-cartesian-grid-vertical line {
+    stroke: rgba(255, 255, 255, 0.1);
+  }
+  
+  .recharts-cartesian-axis-line {
+    stroke: rgba(255, 255, 255, 0.2);
   }
 `;
 
@@ -280,13 +279,18 @@ const CustomTooltip = styled.div`
   padding: 12px;
   box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
   max-width: 90vw;
+  z-index: 1000;
 
   @media (max-width: 768px) {
     padding: 8px;
     font-size: 0.8rem;
+    max-width: 200px;
     
     .tooltip-title {
       font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .tooltip-content {
@@ -583,7 +587,7 @@ export default function Statistiques() {
 
   return (
     <div className={styles.container}>
-      <Particles id="stars" init={particlesInit} options={particlesOptions} className={styles.particles} />
+      <Particles id="tsparticles" init={particlesInit} options={particlesOptions} />
 
       <button className={styles.homeButton} onClick={() => navigate('/')} aria-label="Retour à l'accueil">
         <Home size={24} color="#00ff88" />
@@ -620,7 +624,7 @@ export default function Statistiques() {
             <ResponsiveContainer width="100%" height={80}>
               <LineChart 
                 data={weeklyData.slice(-30)} 
-                margin={{ 
+                margin={{
                   top: 5, 
                   right: window.innerWidth <= 768 ? 5 : 10, 
                   bottom: 5, 
@@ -686,33 +690,31 @@ export default function Statistiques() {
         <KPICard>
           <KPIHeader>
             <KPIIcon>
-              <ArrowUp size={20} />
+              <Home size={window.innerWidth <= 768 ? 16 : 20} />
             </KPIIcon>
             <KPIContent>
-              <KPILabel>Type le plus utilisé</KPILabel>
-              <KPIValue>{kpis.typePopulaire}</KPIValue>
+              <KPILabel>Types de variétés</KPILabel>
             </KPIContent>
           </KPIHeader>
           <ChartContainer>
-            <ResponsiveContainer width="100%" height={80}>
-              <PieChart>
-                <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'types' })} />
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart margin={{ top: 0, right: 0, bottom: window.innerWidth <= 768 ? 20 : 0, left: 0 }}>
                 <Pie
                   data={typesData}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  innerRadius={15}
-                  outerRadius={30}
+                  innerRadius={window.innerWidth <= 768 ? "45%" : "50%"}
+                  outerRadius={window.innerWidth <= 768 ? "70%" : "80%"}
+                  paddingAngle={2}
+                  label={window.innerWidth <= 768 ? false : true}
                 >
                   {typesData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`}
-                      fill={ELEMENT_COLORS.types[entry.name] || CHART_COLORS.accent1}
-                    />
+                    <Cell key={index} fill={ELEMENT_COLORS.types[entry.name] || CHART_COLORS.accent4} />
                   ))}
                 </Pie>
+                <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'types' })} />
               </PieChart>
             </ResponsiveContainer>
           </ChartContainer>
@@ -840,80 +842,6 @@ export default function Statistiques() {
           </div>
         </KPICard>
       </KPIContainer>
-
-      <WeeklyConsumptionContainer>
-        <div className="stats-header" style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          marginBottom: '1rem'
-        }}>
-          <h2 style={{ color: CHART_COLORS.primary }}>Évolution de la Consommation</h2>
-          <div className="stats-info" style={{ display: 'flex', gap: '2rem', color: '#fff' }}>
-            <div>
-              <span style={{ color: CHART_COLORS.primary }}>Maximum : </span>
-              {Math.max(...weeklyData.map(d => d.y))} sticks
-            </div>
-            <div>
-              <span style={{ color: CHART_COLORS.primary }}>Moyenne : </span>
-              {Math.round(weeklyData.reduce((acc, curr) => acc + curr.y, 0) / weeklyData.length)} sticks
-            </div>
-          </div>
-        </div>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={weeklyData}
-            margin={{
-              top: 20,
-              right: window.innerWidth <= 768 ? 10 : 30,
-              bottom: window.innerWidth <= 768 ? 40 : 60,
-              left: window.innerWidth <= 768 ? 20 : 30
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-            <XAxis
-              dataKey="x"
-              tick={{ 
-                fill: '#fff', 
-                fontSize: window.innerWidth <= 768 ? 10 : 12,
-                angle: window.innerWidth <= 768 ? -45 : 0,
-                textAnchor: window.innerWidth <= 768 ? 'end' : 'middle'
-              }}
-              height={window.innerWidth <= 768 ? 60 : 40}
-              interval={window.innerWidth <= 768 ? 1 : 0}
-            />
-            <YAxis
-              tick={{ 
-                fill: '#fff',
-                fontSize: window.innerWidth <= 768 ? 10 : 12
-              }}
-              width={window.innerWidth <= 768 ? 35 : 45}
-            />
-            <Tooltip 
-              content={(props) => renderCustomTooltip({ ...props, type: 'weekly' })}
-              cursor={{ stroke: CHART_COLORS.primary, strokeWidth: 1 }}
-            />
-            <Line
-              type="monotone"
-              dataKey="y"
-              stroke={CHART_COLORS.primary}
-              strokeWidth={window.innerWidth <= 768 ? 2 : 3}
-              dot={{ 
-                fill: CHART_COLORS.primary, 
-                r: window.innerWidth <= 768 ? 3 : 5,
-                strokeWidth: 2,
-                stroke: '#fff'
-              }}
-              activeDot={{
-                r: window.innerWidth <= 768 ? 6 : 8,
-                fill: CHART_COLORS.secondary,
-                stroke: '#fff',
-                strokeWidth: 2
-              }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </WeeklyConsumptionContainer>
 
       <AchatsStats />
     </div>
