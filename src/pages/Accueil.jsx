@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-import AsteroidBackground from '../components/AsteroidBackground';
+import AsteroidBackground from '../components/AsteroidBackground.jsx';
 import styles from './Accueil.module.css';
 
 export default function Accueil() {

@@ -12,7 +12,7 @@ import { loadSlim } from "tsparticles-slim";
 import styles from './Statistiques.module.css';
 import { supabaseHelper } from '../lib/supabase';
 import styled from 'styled-components';
-import AchatsStats from '../components/AchatsStats';
+import AchatsStats from '../components/AchatsStats.jsx';
 
 // Initialisation des particules pour l'effet visuel
 const particlesInit = async (main) => {
