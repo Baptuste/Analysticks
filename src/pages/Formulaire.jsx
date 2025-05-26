@@ -5,9 +5,9 @@ import { Home, Plus, Star, Edit, List, Check, ShoppingCart } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
 import Particles from 'react-tsparticles';
 import { loadSlim } from 'tsparticles-slim';
-import VarietePopup from '../components/VarietePopup';
+import VarietePopup from '../components/VarietePopup.jsx';
 import { supabaseHelper } from '../lib/supabase';
-import AchatPopup from '../components/AchatPopup';
+import AchatPopup from '../components/AchatPopup.jsx';
 
 const particlesInit = async (main) => {
   await loadSlim(main);
@@ -295,11 +295,11 @@ const SelectWrapper = styled.div`
   padding-right: 8px;
 
   select {
-    width: 100%;
+  width: 100%;
     padding: 12px;
     border: none;
-    background: transparent;
-    color: white;
+  background: transparent;
+  color: white;
     outline: none;
     font-size: 1rem;
     margin: 0;
@@ -307,9 +307,9 @@ const SelectWrapper = styled.div`
     -moz-appearance: none;
     appearance: none;
     cursor: pointer;
-    
-    option {
-      background: #1a1a1a;
+
+  option {
+    background: #1a1a1a;
       padding: 10px;
     }
 
@@ -618,20 +618,20 @@ export default function Formulaire() {
 
       <div className={styles.fieldGroup}>
         <label>Variété :</label>
-        <SelectContainer>
-          <SelectWrapper>
+          <SelectContainer>
+            <SelectWrapper>
             <select 
-              value={varieteId} 
-              onChange={(e) => setVarieteId(e.target.value)}
-            >
+                value={varieteId} 
+                onChange={(e) => setVarieteId(e.target.value)}
+              >
               <option value=""></option>
-              {varietes.map((v) => (
-                <option key={v.id} value={v.id}>
-                  {v.nom} ({v.type}){v.origine ? ` - ${v.origine}` : ''}
-                </option>
-              ))}
+                {varietes.map((v) => (
+                  <option key={v.id} value={v.id}>
+                    {v.nom} ({v.type}){v.origine ? ` - ${v.origine}` : ''}
+                  </option>
+                ))}
             </select>
-          </SelectWrapper>
+            </SelectWrapper>
           <ActionButton
             onClick={() => setIsPopupOpen(true)}
             title="Ajouter une variété"
@@ -644,9 +644,9 @@ export default function Formulaire() {
             title="Nouvel achat"
             type="button"
           >
-            <ShoppingCart size={18} color="#00ff88" />
+                <ShoppingCart size={18} color="#00ff88" />
           </ActionButton>
-        </SelectContainer>
+          </SelectContainer>
       </div>
 
       <button 
