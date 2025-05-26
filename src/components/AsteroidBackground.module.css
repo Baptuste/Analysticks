@@ -88,65 +88,65 @@
 
 /* 🌈 COULEURS SPÉCIALES */
 .color-magenta {
-  background: #ff4ec4;
-  box-shadow: 0 0 20px 10px #ff4ec4;
+  background: #ff4ec4 !important;
+  box-shadow: 0 0 20px 10px #ff4ec4 !important;
 }
 .color-magenta::after {
-  background: linear-gradient(90deg, #ff4ec4, transparent);
+  background: linear-gradient(90deg, #ff4ec4, transparent) !important;
 }
 
 .color-cyan {
-  background: #00ccff;
-  box-shadow: 0 0 20px 10px #00ccff;
+  background: #00ccff !important;
+  box-shadow: 0 0 20px 10px #00ccff !important;
 }
 .color-cyan::after {
-  background: linear-gradient(90deg, #00ccff, transparent);
+  background: linear-gradient(90deg, #00ccff, transparent) !important;
 }
 
 .color-yellow {
-  background: #ffcc00;
-  box-shadow: 0 0 20px 10px #ffcc00;
+  background: #ffcc00 !important;
+  box-shadow: 0 0 20px 10px #ffcc00 !important;
 }
 .color-yellow::after {
-  background: linear-gradient(90deg, #ffcc00, transparent);
+  background: linear-gradient(90deg, #ffcc00, transparent) !important;
 }
 
 .color-green {
-  background: #00ff88;
-  box-shadow: 0 0 20px 10px #00ff88;
+  background: #00ff88 !important;
+  box-shadow: 0 0 20px 10px #00ff88 !important;
 }
 .color-green::after {
-  background: linear-gradient(90deg, #00ff88, transparent);
+  background: linear-gradient(90deg, #00ff88, transparent) !important;
 }
 
 .color-pink {
-  background: #ff0066;
-  box-shadow: 0 0 20px 10px #ff0066;
+  background: #ff0066 !important;
+  box-shadow: 0 0 20px 10px #ff0066 !important;
 }
 .color-pink::after {
-  background: linear-gradient(90deg, #ff0066, transparent);
+  background: linear-gradient(90deg, #ff0066, transparent) !important;
 }
 
 .color-orange {
-  background: #ff9900;
-  box-shadow: 0 0 20px 10px #ff9900;
+  background: #ff9900 !important;
+  box-shadow: 0 0 20px 10px #ff9900 !important;
 }
 .color-orange::after {
-  background: linear-gradient(90deg, #ff9900, transparent);
+  background: linear-gradient(90deg, #ff9900, transparent) !important;
 }
 
 .color-lime {
-  background: #66ff66;
-  box-shadow: 0 0 20px 10px #66ff66;
+  background: #66ff66 !important;
+  box-shadow: 0 0 20px 10px #66ff66 !important;
 }
 .color-lime::after {
-  background: linear-gradient(90deg, #66ff66, transparent);
+  background: linear-gradient(90deg, #66ff66, transparent) !important;
 }
 
 .color-purple {
-  background: #cc99ff;
-  box-shadow: 0 0 20px 10px #cc99ff;
+  background: #cc99ff !important;
+  box-shadow: 0 0 20px 10px #cc99ff !important;
 }
 .color-purple::after {
-  background: linear-gradient(90deg, #cc99ff, transparent);
+  background: linear-gradient(90deg, #cc99ff, transparent) !important;
 }
