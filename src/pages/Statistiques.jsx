@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Home, ArrowUp } from 'lucide-react';
+import { 
+  Home, 
+  Hash, 
+  Leaf, 
+  PieChart as PieChartIcon,
+  Ruler,
+  ArrowUp
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
   PieChart, Pie, ResponsiveContainer,
@@ -56,18 +63,23 @@ const particlesOptions = {
 const KPIContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
   gap: 1rem;
   margin: 1rem auto;
   max-width: 1200px;
   width: calc(100% - 2rem);
   
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
-    margin: 0.8rem;
-    width: calc(100% - 1.6rem);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin: 0.5rem;
+    width: calc(100% - 1rem);
   }
+`;
+
+// Conteneur spécial pour les statistiques d'achat
+const AchatsContainer = styled.div`
+  grid-column: 1 / -1;  // Prend toute la largeur
+  margin-top: 1rem;
 `;
 
 const KPICard = styled.div`
@@ -82,8 +94,9 @@ const KPICard = styled.div`
   min-height: 200px;
 
   @media (max-width: 768px) {
-    padding: 1rem;
-    min-height: 160px;
+    padding: 0.75rem;
+    min-height: 140px;
+    font-size: 0.9rem;
   }
 
   &:hover {
@@ -97,7 +110,10 @@ const KPIHeader = styled.div`
   margin-bottom: 1.5rem;
 
   @media (max-width: 768px) {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 `;
 
@@ -113,8 +129,10 @@ const KPIIcon = styled.div`
   color: #00ff88;
 
   @media (max-width: 768px) {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
+    margin-right: 0;
+    margin-bottom: 0.5rem;
   }
 `;
 
@@ -122,6 +140,11 @@ const KPIContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    align-items: center;
+  }
 `;
 
 const KPILabel = styled.div`
@@ -131,7 +154,8 @@ const KPILabel = styled.div`
   font-weight: 500;
 
   @media (max-width: 768px) {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    text-align: center;
   }
 `;
 
@@ -143,132 +167,87 @@ const KPIValue = styled.div`
   word-break: break-word;
 
   @media (max-width: 768px) {
-    font-size: 1.4rem;
-    margin: 0.3rem 0;
+    font-size: 1.2rem;
+    margin: 0.2rem 0;
   }
 `;
 
 const ChartContainer = styled.div`
   flex: 1;
-  margin: 0.5rem;
-  min-height: 100px;
+  min-height: 250px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
 
   @media (max-width: 768px) {
-    margin: 0.25rem;
-    min-height: 80px;
-    
-    .recharts-legend-wrapper {
-      position: relative !important;
-      width: 100% !important;
-      height: auto !important;
-      left: 0 !important;
-      bottom: -10px !important;
-      display: flex;
-      justify-content: center;
-      
-      .recharts-default-legend {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 8px;
-        padding: 4px;
-        
-        .recharts-legend-item {
-          margin: 0 !important;
-          padding: 2px 4px !important;
-          font-size: 0.7rem !important;
-        }
-      }
-    }
+    min-height: 120px;
+    padding: 0.25rem;
   }
 
   .recharts-wrapper {
-    position: relative;
     width: 100% !important;
-  }
-
-  .recharts-text {
-    @media (max-width: 768px) {
-      font-size: 0.7rem !important;
-    }
-  }
-
-  .recharts-cartesian-axis-tick-value {
-    @media (max-width: 768px) {
-      font-size: 0.65rem;
-    }
-  }
-  
-  .recharts-cartesian-grid-horizontal line,
-  .recharts-cartesian-grid-vertical line {
-    stroke: rgba(255, 255, 255, 0.1);
-  }
-  
-  .recharts-cartesian-axis-line {
-    stroke: rgba(255, 255, 255, 0.2);
+    height: 100% !important;
   }
 `;
 
 // Palette de couleurs pour les graphiques
 const CHART_COLORS = {
-  primary: '#00ff88',
-  secondary: '#00ccff',
-  accent1: '#ff3366',
-  accent2: '#ffcc00',
-  accent3: '#9966ff',
-  accent4: '#ff9933',
-  background: 'rgba(0, 255, 136, 0.1)'
+  primary: '#00E676',       // Vert vif principal
+  secondary: '#00B0FF',     // Bleu clair secondaire
+  accent1: '#FF4081',       // Rose accent
+  accent2: '#FFD740',       // Jaune doré accent
+  accent3: '#651FFF',       // Violet accent
+  accent4: '#FF6D00',       // Orange accent
+  background: 'rgba(0, 230, 118, 0.1)' // Fond vert transparent
 };
 
 const CHART_GRADIENTS = {
   primary: [
-    { offset: '0%', color: 'rgba(0, 255, 136, 0.6)' },
-    { offset: '100%', color: 'rgba(0, 255, 136, 0.1)' }
+    { offset: '0%', color: 'rgba(0, 230, 118, 0.6)' },  // Vert plus vif
+    { offset: '100%', color: 'rgba(0, 230, 118, 0.1)' }
   ],
   secondary: [
-    { offset: '0%', color: 'rgba(0, 204, 255, 0.6)' },
-    { offset: '100%', color: 'rgba(0, 204, 255, 0.1)' }
+    { offset: '0%', color: 'rgba(0, 176, 255, 0.6)' },  // Bleu plus vif
+    { offset: '100%', color: 'rgba(0, 176, 255, 0.1)' }
   ]
 };
 
 // Palette de couleurs pour les éléments
 const ELEMENT_COLORS = {
   types: {
-    'Beuh': '#4CAF50',
-    'Mousseux': '#2196F3',
-    'Dry': '#9C27B0',
-    'Frozen': '#00BCD4',
-    'Static': '#FF9800',
-    'Autres': '#607D8B'
+    'Beuh': '#00E676',      // Vert vif
+    'Mousseux': '#00B0FF',  // Bleu clair vif
+    'Dry': '#FF4081',       // Rose vif
+    'Frozen': '#40C4FF',    // Bleu ciel
+    'Static': '#FFD740',    // Jaune doré
+    'Autres': '#78909C'     // Gris bleuté
   },
   repartitions: {
-    'Pure': '#E91E63',
-    '10/90': '#F44336',
-    '20/80': '#FF5722',
-    '30/70': '#FF9800',
-    '40/60': '#FFC107',
-    '50/50': '#FFEB3B',
-    '60/40': '#8BC34A',
-    '70/30': '#4CAF50',
-    'Mixte': '#009688'
+    'Pure': '#FF1744',      // Rouge vif
+    '10/90': '#FF4081',     // Rose
+    '20/80': '#F50057',     // Rose foncé
+    '30/70': '#D500F9',     // Violet
+    '40/60': '#651FFF',     // Violet foncé
+    '50/50': '#3D5AFE',     // Bleu indigo
+    '60/40': '#2979FF',     // Bleu vif
+    '70/30': '#00B0FF',     // Bleu clair
+    'Mixte': '#00E5FF'      // Cyan
   },
   longueurs: {
-    'Petit': '#3F51B5',
-    'Moyen -': '#2196F3',
-    'Moyen': '#03A9F4',
-    'Moyen +': '#00BCD4',
-    'Long': '#009688'
+    'Petit': '#FF6B6B',     // Rouge corail
+    'Moyen -': '#4ECDC4',   // Turquoise vif
+    'Moyen': '#FFD93D',     // Jaune soleil
+    'Moyen +': '#6C5CE7',   // Violet électrique
+    'Long': '#A8E6CF'       // Vert menthe
   },
   largeurs: {
-    'Skinny': '#9C27B0',
-    'Normal -': '#E91E63',
-    'Normal': '#F44336',
-    'Normal +': '#FF5722',
-    'Bien': '#FF9800'
+    'Skinny': '#FF8066',    // Corail vif
+    'Normal -': '#45B7D1',  // Bleu océan
+    'Normal': '#96E6A1',    // Vert prairie
+    'Normal +': '#D4A5FF',  // Violet lavande
+    'Bien': '#FFB480'       // Orange pêche
   }
 };
 
@@ -392,6 +371,72 @@ const renderCustomTooltip = ({ active, payload, label, type }) => {
       <div className="tooltip-content">{content}</div>
     </CustomTooltip>
   );
+};
+
+const ComparaisonContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(0, 255, 136, 0.05);
+  border-radius: 8px;
+
+  @media (max-width: 768px) {
+    gap: 0.25rem;
+    padding: 0.25rem;
+    font-size: 0.8rem;
+  }
+`;
+
+const ComparaisonItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+
+  @media (max-width: 768px) {
+    padding: 0.25rem;
+  }
+`;
+
+const ComparaisonLabel = styled.div`
+  color: #fff;
+  opacity: 0.8;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+  text-align: center;
+
+  @media (max-width: 768px) {
+    font-size: 0.7rem;
+  }
+`;
+
+const ComparaisonValue = styled.div`
+  color: ${props => props.$isPositive ? '#00ff88' : '#ff3366'};
+  font-weight: bold;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
+`;
+
+const calculerComparaison = (donnees, jours) => {
+  if (!donnees || donnees.length === 0) return { valeur: 0, variation: 0 };
+  
+  const maintenant = donnees[donnees.length - 1]?.y || 0;
+  const precedent = donnees[donnees.length - 1 - jours]?.y || 0;
+  
+  const variation = precedent !== 0 ? ((maintenant - precedent) / precedent) * 100 : 0;
+  
+  return {
+    valeur: maintenant,
+    variation: Math.round(variation)
+  };
 };
 
 export default function Statistiques() {
@@ -587,19 +632,17 @@ export default function Statistiques() {
 
   return (
     <div className={styles.container}>
-      <Particles id="tsparticles" init={particlesInit} options={particlesOptions} />
-
-      <button className={styles.homeButton} onClick={() => navigate('/')} aria-label="Retour à l'accueil">
-        <Home size={24} color="#00ff88" />
+      <Particles id="tsparticles" init={particlesInit} options={particlesOptions} className={styles.particles} />
+      <button className={styles.homeButton} onClick={() => navigate('/')}>
+        <Home size={24} color="#00ffcc" />
       </button>
-
       <h1 className={styles.mainTitle}>Statistiques</h1>
 
       <KPIContainer>
         <KPICard>
           <KPIHeader>
             <KPIIcon>
-              <ArrowUp size={20} />
+              <Hash size={window.innerWidth <= 768 ? 16 : 20} />
             </KPIIcon>
             <KPIContent>
               <KPILabel>Total des sticks</KPILabel>
@@ -669,6 +712,22 @@ export default function Statistiques() {
               </LineChart>
             </ResponsiveContainer>
           </ChartContainer>
+          <ComparaisonContainer>
+            <ComparaisonItem>
+              <ComparaisonLabel>vs Semaine dernière</ComparaisonLabel>
+              <ComparaisonValue $isPositive={calculerComparaison(weeklyData, 7).variation >= 0}>
+                {calculerComparaison(weeklyData, 7).variation > 0 ? '+' : ''}
+                {calculerComparaison(weeklyData, 7).variation}%
+              </ComparaisonValue>
+            </ComparaisonItem>
+            <ComparaisonItem>
+              <ComparaisonLabel>vs Mois dernier</ComparaisonLabel>
+              <ComparaisonValue $isPositive={calculerComparaison(weeklyData, 30).variation >= 0}>
+                {calculerComparaison(weeklyData, 30).variation > 0 ? '+' : ''}
+                {calculerComparaison(weeklyData, 30).variation}%
+              </ComparaisonValue>
+            </ComparaisonItem>
+          </ComparaisonContainer>
           <div style={{ 
             display: 'flex', 
             justifyContent: 'space-between', 
@@ -690,7 +749,7 @@ export default function Statistiques() {
         <KPICard>
           <KPIHeader>
             <KPIIcon>
-              <Home size={window.innerWidth <= 768 ? 16 : 20} />
+              <Leaf size={window.innerWidth <= 768 ? 16 : 20} />
             </KPIIcon>
             <KPIContent>
               <KPILabel>Types de variétés</KPILabel>
@@ -698,17 +757,21 @@ export default function Statistiques() {
           </KPIHeader>
           <ChartContainer>
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart margin={{ top: 0, right: 0, bottom: window.innerWidth <= 768 ? 20 : 0, left: 0 }}>
+              <PieChart margin={{ top: 0, right: 0, bottom: window.innerWidth <= 768 ? 10 : 0, left: 0 }}>
                 <Pie
                   data={typesData}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  innerRadius={window.innerWidth <= 768 ? "45%" : "50%"}
-                  outerRadius={window.innerWidth <= 768 ? "70%" : "80%"}
-                  paddingAngle={2}
-                  label={window.innerWidth <= 768 ? false : true}
+                  innerRadius={window.innerWidth <= 768 ? "30%" : "40%"}
+                  outerRadius={window.innerWidth <= 768 ? "85%" : "90%"}
+                  paddingAngle={window.innerWidth <= 768 ? 1 : 2}
+                  label={window.innerWidth <= 768 ? false : {
+                    position: 'outside',
+                    fill: '#fff',
+                    fontSize: 12
+                  }}
                 >
                   {typesData.map((entry, index) => (
                     <Cell key={index} fill={ELEMENT_COLORS.types[entry.name] || CHART_COLORS.accent4} />
@@ -723,7 +786,7 @@ export default function Statistiques() {
         <KPICard>
           <KPIHeader>
             <KPIIcon>
-              <ArrowUp size={20} />
+              <PieChartIcon size={window.innerWidth <= 768 ? 16 : 20} />
             </KPIIcon>
             <KPIContent>
               <KPILabel>Répartition favorite</KPILabel>
@@ -731,7 +794,7 @@ export default function Statistiques() {
             </KPIContent>
           </KPIHeader>
           <ChartContainer>
-            <ResponsiveContainer width="100%" height={80}>
+            <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'repartition' })} />
                 <Pie
@@ -740,8 +803,14 @@ export default function Statistiques() {
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  innerRadius={15}
-                  outerRadius={30}
+                  innerRadius={window.innerWidth <= 768 ? "35%" : "45%"}
+                  outerRadius={window.innerWidth <= 768 ? "75%" : "85%"}
+                  paddingAngle={2}
+                  label={window.innerWidth <= 768 ? false : {
+                    position: 'outside',
+                    fill: '#fff',
+                    fontSize: 12
+                  }}
                 >
                   {repartitionData.map((entry, index) => (
                     <Cell 
@@ -758,7 +827,7 @@ export default function Statistiques() {
         <KPICard>
           <KPIHeader>
             <KPIIcon>
-              <ArrowUp size={20} />
+              <Ruler size={window.innerWidth <= 768 ? 16 : 20} />
             </KPIIcon>
             <KPIContent>
               <KPILabel>Dimensions</KPILabel>
@@ -785,7 +854,7 @@ export default function Statistiques() {
             justifyContent: 'space-between',
             gap: window.innerWidth <= 768 ? '0.5rem' : '1rem'
           }}>
-            <ResponsiveContainer width="48%" height={window.innerWidth <= 768 ? 60 : 80}>
+            <ResponsiveContainer width="48%" height={window.innerWidth <= 768 ? 120 : 150}>
               <PieChart>
                 <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'longueur' })} />
                 <Pie
@@ -794,8 +863,14 @@ export default function Statistiques() {
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  innerRadius={window.innerWidth <= 768 ? 12 : 15}
-                  outerRadius={window.innerWidth <= 768 ? 24 : 30}
+                  innerRadius={window.innerWidth <= 768 ? "35%" : "45%"}
+                  outerRadius={window.innerWidth <= 768 ? "75%" : "85%"}
+                  paddingAngle={2}
+                  label={window.innerWidth <= 768 ? false : {
+                    position: 'outside',
+                    fill: '#fff',
+                    fontSize: 11
+                  }}
                 >
                   {longueursData.map((entry, index) => (
                     <Cell 
@@ -806,7 +881,7 @@ export default function Statistiques() {
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
-            <ResponsiveContainer width="48%" height={window.innerWidth <= 768 ? 60 : 80}>
+            <ResponsiveContainer width="48%" height={window.innerWidth <= 768 ? 120 : 150}>
               <PieChart>
                 <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'largeur' })} />
                 <Pie
@@ -815,8 +890,14 @@ export default function Statistiques() {
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  innerRadius={window.innerWidth <= 768 ? 12 : 15}
-                  outerRadius={window.innerWidth <= 768 ? 24 : 30}
+                  innerRadius={window.innerWidth <= 768 ? "35%" : "45%"}
+                  outerRadius={window.innerWidth <= 768 ? "75%" : "85%"}
+                  paddingAngle={2}
+                  label={window.innerWidth <= 768 ? false : {
+                    position: 'outside',
+                    fill: '#fff',
+                    fontSize: 11
+                  }}
                 >
                   {largeursData.map((entry, index) => (
                     <Cell 
@@ -841,9 +922,12 @@ export default function Statistiques() {
             <div>Largeur</div>
           </div>
         </KPICard>
-      </KPIContainer>
 
-      <AchatsStats />
+        {/* Statistiques d'achat sur toute la largeur */}
+        <AchatsContainer>
+          <AchatsStats />
+        </AchatsContainer>
+      </KPIContainer>
     </div>
   );
 }
