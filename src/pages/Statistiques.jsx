@@ -615,7 +615,7 @@ export default function Statistiques() {
                   color: '#fff', 
                   opacity: 0.8 
                 }}>
-                  Dernier mois
+                  Total
                 </div>
               </div>
             </KPIContent>
