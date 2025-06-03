@@ -400,25 +400,27 @@ export default function AchatsStats() {
       // Statistiques par variété
       const statsParVariete = {};
       for (const achat of validAchats) {
-        if (!statsParVariete[achat.variete]) {
-          statsParVariete[achat.variete] = {
-            nom: achat.variete,
+        const varieteNom = achat.varietes.nom;
+        if (!statsParVariete[varieteNom]) {
+          statsParVariete[varieteNom] = {
+            nom: varieteNom,
             quantiteTotale: 0,
             montantTotal: 0,
             nombreAchats: 0,
             sticksTotal: 0,
             dernierAchat: null,
-            varieteId: achat.varieteId
+            varieteId: achat.varietes.id
           };
         }
 
-        const stats = statsParVariete[achat.variete];
-        stats.quantiteTotale = safeNumber(stats.quantiteTotale) + achat.quantite;
-        stats.montantTotal = safeNumber(stats.montantTotal) + achat.prix;
+        const stats = statsParVariete[varieteNom];
+        stats.quantiteTotale = safeNumber(stats.quantiteTotale) + safeNumber(achat.quantite);
+        stats.montantTotal = safeNumber(stats.montantTotal) + safeNumber(achat.prix);
         stats.nombreAchats += 1;
         
-        if (!stats.dernierAchat || achat.date > stats.dernierAchat) {
-          stats.dernierAchat = achat.date;
+        const achatDate = new Date(achat.created_at);
+        if (!stats.dernierAchat || achatDate > stats.dernierAchat) {
+          stats.dernierAchat = achatDate;
         }
       }
 
@@ -446,7 +448,6 @@ export default function AchatsStats() {
       const totalMontant = validAchats.reduce((sum, achat) => sum + safeNumber(achat.prix), 0);
       const prixMoyenParGramme = totalQuantite > 0 ? totalMontant / totalQuantite : 0;
       
-      // Récupérer les informations du dernier achat
       const dernierAchatData = validAchats[validAchats.length - 1];
       const dernierAchat = dernierAchatData ? new Date(dernierAchatData.created_at) : null;
       const dernierAchatQuantite = dernierAchatData ? safeNumber(dernierAchatData.quantite) : 0;
