@@ -17,6 +17,7 @@ import styles from './Statistiques.module.css';
 import { supabaseHelper } from '../lib/supabase';
 import styled from 'styled-components';
 import AchatsStats from '../components/AchatsStats.jsx';
+import LoadingBattery from '../components/LoadingBattery.jsx';
 
 // Initialisation des particules pour l'effet visuel
 const particlesInit = async (main) => {
@@ -425,6 +426,19 @@ const calculerComparaison = (donnees, jours) => {
   };
 };
 
+const LoadingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #111;
+  z-index: 1000;
+`;
+
 export default function Statistiques() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -605,17 +619,9 @@ export default function Statistiques() {
   }, []);
 
   if (loading) return (
-    <div className={styles.container}>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        color: '#00ff88'
-      }}>
-        Chargement des statistiques...
-      </div>
-    </div>
+    <LoadingWrapper>
+      <LoadingBattery />
+    </LoadingWrapper>
   );
 
   if (error) return (

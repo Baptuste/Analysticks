@@ -5,6 +5,7 @@ import {
   ResponsiveContainer, LineChart, Line
 } from 'recharts';
 import { supabaseHelper } from '../lib/supabase';
+import LoadingBattery from './LoadingBattery';
 
 const StatsContainer = styled.div`
   background: #222;
@@ -181,6 +182,19 @@ const VarieteItemLabel = styled.span`
 const VarieteItemValue = styled.span`
   color: ${props => props.$color};
   font-weight: bold;
+`;
+
+const LoadingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #111;
+  z-index: 1000;
 `;
 
 const COLORS = {
@@ -490,7 +504,11 @@ export default function AchatsStats() {
     }
   };
 
-  if (loading) return <StatsContainer>Chargement des statistiques d'achats...</StatsContainer>;
+  if (loading) return (
+    <LoadingWrapper>
+      <LoadingBattery />
+    </LoadingWrapper>
+  );
   if (error) return <StatsContainer>Erreur : {error}</StatsContainer>;
 
   return (

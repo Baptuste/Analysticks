@@ -1,11 +1,30 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 import App from './App';
-import Formulaire from './pages/Formulaire';
-import Statistiques from './pages/Statistiques';
-import Accueil from './pages/Accueil';
+
+// Chargement différé des pages avec un délai minimal pour assurer l'animation
+const Accueil = lazy(() => 
+  Promise.all([
+    import('./pages/Accueil'),
+    new Promise(resolve => setTimeout(resolve, 300))
+  ]).then(([module]) => module)
+);
+
+const Formulaire = lazy(() => 
+  Promise.all([
+    import('./pages/Formulaire'),
+    new Promise(resolve => setTimeout(resolve, 300))
+  ]).then(([module]) => module)
+);
+
+const Statistiques = lazy(() => 
+  Promise.all([
+    import('./pages/Statistiques'),
+    new Promise(resolve => setTimeout(resolve, 300))
+  ]).then(([module]) => module)
+);
 
 // Configuration du routeur avec les futurs flags
 const router = createBrowserRouter(

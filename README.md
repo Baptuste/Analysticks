@@ -1,70 +1,209 @@
-# Getting Started with Create React App
+# 📊 Analysticks
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Application de suivi et d'analyse statistique développée avec React et Supabase.
 
-## Available Scripts
+## 📋 Table des matières
 
-In the project directory, you can run:
+- [Aperçu](#aperçu)
+- [Fonctionnalités](#fonctionnalités)
+- [Architecture](#architecture)
+- [Technologies utilisées](#technologies-utilisées)
+- [Installation](#installation)
+- [Structure des données](#structure-des-données)
+- [Composants principaux](#composants-principaux)
+- [Animations et UI](#animations-et-ui)
 
-### `npm start`
+## 🎯 Aperçu
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Analysticks est une application web permettant de suivre et d'analyser des données d'achats et de consommation. Elle offre une interface moderne et intuitive avec des visualisations de données en temps réel.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## ✨ Fonctionnalités
 
-### `npm test`
+### 📈 Statistiques globales
+- Suivi du nombre total d'achats
+- Calcul du prix moyen par gramme
+- Affichage des détails du dernier achat
+- Graphique d'évolution temporelle
+- Comparaisons hebdomadaires et mensuelles
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🔄 Gestion des achats
+- Enregistrement des nouveaux achats
+- Suivi des quantités et prix
+- Association avec des variétés
+- Historique complet des transactions
 
-### `npm run build`
+### 📊 Analyses par variété
+- Statistiques détaillées par type
+- Suivi des quantités par variété
+- Prix moyens par catégorie
+- Graphiques de répartition
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 🎨 Interface utilisateur
+- Design moderne et responsive
+- Animations fluides
+- Thème sombre personnalisé
+- Indicateurs de chargement animés
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🏗 Architecture
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Structure du projet
+```
+src/
+├── components/         # Composants réutilisables
+├── pages/             # Pages principales
+├── lib/               # Utilitaires et services
+├── styles/            # Styles globaux
+└── assets/            # Ressources statiques
+```
 
-### `npm run eject`
+### Base de données (Supabase)
+- Table `achats`: Transactions
+- Table `varietes`: Catalogue des variétés
+- Relations entre achats et variétés
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🛠 Technologies utilisées
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Frontend
+- React 18
+- React Router 6
+- Styled Components
+- Recharts (visualisations)
+- React-tsparticles (effets visuels)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Backend
+- Supabase (Base de données et authentification)
+- API REST
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Outils de développement
+- Create React App
+- ESLint
+- Prettier
 
-## Learn More
+## 💻 Installation
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Cloner le repository
+```bash
+git clone [url-du-repo]
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. Installer les dépendances
+```bash
+npm install
+```
 
-### Code Splitting
+3. Configurer les variables d'environnement
+```bash
+REACT_APP_SUPABASE_URL=votre_url
+REACT_APP_SUPABASE_ANON_KEY=votre_clé
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+4. Lancer l'application
+```bash
+npm start
+```
 
-### Analyzing the Bundle Size
+## 📝 Structure des données
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Achat
+```typescript
+interface Achat {
+  id: string
+  created_at: string
+  quantite: number
+  prix: number
+  variete_id: string
+  varietes: Variete
+}
+```
 
-### Making a Progressive Web App
+### Variété
+```typescript
+interface Variete {
+  id: string
+  nom: string
+  type: string
+  description?: string
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 🧩 Composants principaux
 
-### Advanced Configuration
+### AchatsStats
+- Affichage des statistiques d'achats
+- Graphiques d'évolution
+- KPIs principaux
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### LoadingBattery
+- Animation de chargement personnalisée
+- Transition de couleurs
+- Indicateur de progression
 
-### Deployment
+### Formulaire
+- Saisie des nouveaux achats
+- Validation des données
+- Interface intuitive
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🎨 Animations et UI
 
-### `npm run build` fails to minify
+### Transitions de pages
+- Chargement progressif
+- Animations fluides
+- Retours visuels
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Particules
+- Effets visuels dynamiques
+- Ambiance immersive
+- Performance optimisée
+
+### Thème
+- Palette de couleurs cohérente
+- Contraste optimal
+- Accessibilité respectée
+
+## 🔄 Processus métier
+
+### Enregistrement d'un achat
+1. Saisie des informations
+2. Validation des données
+3. Enregistrement en base
+4. Mise à jour des statistiques
+
+### Calcul des statistiques
+1. Récupération des données
+2. Traitement et agrégation
+3. Calcul des indicateurs
+4. Mise à jour des visualisations
+
+### Gestion des variétés
+1. Catalogue maintenu
+2. Association aux achats
+3. Statistiques dédiées
+
+## 🔒 Sécurité
+
+- Authentification Supabase
+- Protection des routes
+- Validation des données
+- Gestion des erreurs
+
+## 🚀 Performance
+
+- Chargement différé des composants
+- Optimisation des requêtes
+- Mise en cache des données
+- Animations optimisées
+
+## 📱 Responsive
+
+- Adaptation mobile
+- Interfaces flexibles
+- Composants réactifs
+- Expérience cohérente
+
+## 🔄 Mises à jour futures
+
+- [ ] Mode hors ligne
+- [ ] Notifications push
+- [ ] Export des données
+- [ ] Thèmes personnalisables
+- [ ] Nouveaux types de graphiques
