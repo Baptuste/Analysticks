@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -43,31 +43,6 @@ const Title = styled.h2`
 
   @media (max-width: 768px) {
     font-size: 1.2rem;
-  }
-`;
-
-const FilterContainer = styled.div`
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    justify-content: space-between;
-  }
-`;
-
-const FilterButton = styled.button`
-  background: ${props => props.$active ? '#00ff88' : 'transparent'};
-  color: ${props => props.$active ? '#000' : '#00ff88'};
-  border: 1px solid #00ff88;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: ${props => props.$active ? '#00cc6a' : 'rgba(0, 255, 136, 0.1)'};
   }
 `;
 
@@ -138,24 +113,6 @@ const CustomTooltip = styled.div`
     color: #00ccff;
     font-weight: bold;
   }
-`;
-
-const ChartsGrid = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const PieChartContainer = styled.div`
-  height: 400px;
-  background: rgba(0, 255, 136, 0.05);
-  border-radius: 8px;
-  padding: 1rem;
 `;
 
 const VarieteStatsGrid = styled.div`
@@ -315,76 +272,22 @@ const renderCustomTooltip = ({ active, payload, label }) => {
   }
 };
 
-const renderPieTooltip = ({ active, payload }) => {
-  if (!active || !payload || !payload.length) return null;
-
-  const data = payload[0].payload;
-  return (
-    <CustomTooltip>
-      <div className="tooltip-title">{data.nom}</div>
-      <div className="tooltip-content">
-        <div>Quantité totale : <span className="tooltip-value">{data.quantite}g</span></div>
-        <div>Montant total : <span className="tooltip-value">{data.montant}€</span></div>
-        <div>Nombre d'achats : <span className="tooltip-value">{data.nombre}</span></div>
-      </div>
-    </CustomTooltip>
-  );
-};
-
 export default function AchatsStats() {
   const [achats, setAchats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [timeFilter, setTimeFilter] = useState('month');
   const [processedData, setProcessedData] = useState([]);
   const [varieteStats, setVarieteStats] = useState({});
   const [stats, setStats] = useState({
     totalQuantite: 0,
     totalMontant: 0,
-    moyenneQuantite: 0,
-    moyennePrix: 0,
-    frequenceAchats: 0,
+    prixMoyenParGramme: 0,
     dernierAchat: null,
-    prochainAchatEstime: null
+    dernierAchatQuantite: 0,
+    dernierAchatPrix: 0
   });
 
-  useEffect(() => {
-    fetchAchats();
-  }, []);
-
-  useEffect(() => {
-    const processData = async () => {
-      await processAchatsData();
-    };
-    processData();
-  }, [achats, timeFilter]);
-
-  const fetchAchats = async () => {
-    try {
-      const data = await supabaseHelper.getAchats();
-      setAchats(data);
-      setError('');
-    } catch (err) {
-      console.error('Erreur lors de la récupération des achats:', err);
-      setError('Impossible de charger les données d\'achats');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const calculerFrequenceAchats = (achatsData) => {
-    if (achatsData.length < 2) return 0;
-    
-    const dates = achatsData.map(achat => new Date(achat.created_at));
-    dates.sort((a, b) => a - b);
-    
-    const diffTotal = dates[dates.length - 1] - dates[0];
-    const diffJours = diffTotal / (1000 * 60 * 60 * 24);
-    
-    return Math.round(diffJours / (dates.length - 1));
-  };
-
-  const processAchatsData = async () => {
+  const processAchatsData = useCallback(async () => {
     try {
       if (!Array.isArray(achats) || achats.length === 0) {
         console.log('Pas d\'achats à traiter');
@@ -392,13 +295,6 @@ export default function AchatsStats() {
         setVarieteStats({});
         return;
       }
-
-      const now = new Date();
-      const timeFrames = {
-        week: 7,
-        month: 30,
-        year: 365
-      };
 
       // Nettoyage et validation des données
       const validAchats = achats.filter(achat => {
@@ -435,15 +331,9 @@ export default function AchatsStats() {
         varieteId: achat.varietes.id
       }));
 
-      // Filtrage par période
-      const filteredAchats = achatsAvecDates.filter(achat => {
-        const diffDays = Math.floor((now - achat.date) / (1000 * 60 * 60 * 24));
-        return diffDays <= timeFrames[timeFilter];
-      });
-
       // Groupement par date
       const achatsParDate = {};
-      filteredAchats.forEach(achat => {
+      achatsAvecDates.forEach(achat => {
         const dateStr = achat.date.toLocaleDateString('fr-FR', {
           day: '2-digit',
           month: 'short'
@@ -509,7 +399,7 @@ export default function AchatsStats() {
 
       // Statistiques par variété
       const statsParVariete = {};
-      for (const achat of filteredAchats) {
+      for (const achat of validAchats) {
         if (!statsParVariete[achat.variete]) {
           statsParVariete[achat.variete] = {
             nom: achat.variete,
@@ -552,30 +442,50 @@ export default function AchatsStats() {
       setVarieteStats(statsParVariete);
 
       // Calculer les totaux
-      const totalQuantite = filteredAchats.reduce((sum, achat) => sum + safeNumber(achat.quantite), 0);
-      const totalMontant = filteredAchats.reduce((sum, achat) => sum + safeNumber(achat.prix), 0);
-      const frequenceAchats = calculerFrequenceAchats(filteredAchats);
+      const totalQuantite = validAchats.reduce((sum, achat) => sum + safeNumber(achat.quantite), 0);
+      const totalMontant = validAchats.reduce((sum, achat) => sum + safeNumber(achat.prix), 0);
+      const prixMoyenParGramme = totalQuantite > 0 ? totalMontant / totalQuantite : 0;
       
-      const dernierAchat = filteredAchats[filteredAchats.length - 1]?.date;
-      const prochainAchatEstime = dernierAchat ? new Date(dernierAchat.getTime()) : null;
-      if (prochainAchatEstime) {
-        prochainAchatEstime.setDate(prochainAchatEstime.getDate() + frequenceAchats);
-      }
+      // Récupérer les informations du dernier achat
+      const dernierAchatData = validAchats[validAchats.length - 1];
+      const dernierAchat = dernierAchatData ? new Date(dernierAchatData.created_at) : null;
+      const dernierAchatQuantite = dernierAchatData ? safeNumber(dernierAchatData.quantite) : 0;
+      const dernierAchatPrix = dernierAchatData ? safeNumber(dernierAchatData.prix) : 0;
 
       setStats({
         totalQuantite: safeToFixed(totalQuantite),
         totalMontant: safeToFixed(totalMontant),
-        moyenneQuantite: safeToFixed(totalQuantite / filteredAchats.length),
-        moyennePrix: safeToFixed(totalMontant / filteredAchats.length),
-        frequenceAchats,
+        prixMoyenParGramme: safeToFixed(prixMoyenParGramme),
         dernierAchat,
-        prochainAchatEstime
+        dernierAchatQuantite: safeToFixed(dernierAchatQuantite),
+        dernierAchatPrix: safeToFixed(dernierAchatPrix)
       });
 
     } catch (error) {
       console.error('Erreur lors du traitement des données:', error);
       setProcessedData([]);
       setVarieteStats({});
+    }
+  }, [achats]);
+
+  useEffect(() => {
+    fetchAchats();
+  }, []);
+
+  useEffect(() => {
+    processAchatsData();
+  }, [processAchatsData]);
+
+  const fetchAchats = async () => {
+    try {
+      const data = await supabaseHelper.getAchats();
+      setAchats(data);
+      setError('');
+    } catch (err) {
+      console.error('Erreur lors de la récupération des achats:', err);
+      setError('Impossible de charger les données d\'achats');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -586,26 +496,6 @@ export default function AchatsStats() {
     <StatsContainer>
       <Header>
         <Title>Suivi des Achats</Title>
-        <FilterContainer>
-          <FilterButton
-            $active={timeFilter === 'week'}
-            onClick={() => setTimeFilter('week')}
-          >
-            Semaine
-          </FilterButton>
-          <FilterButton
-            $active={timeFilter === 'month'}
-            onClick={() => setTimeFilter('month')}
-          >
-            Mois
-          </FilterButton>
-          <FilterButton
-            $active={timeFilter === 'year'}
-            onClick={() => setTimeFilter('year')}
-          >
-            Année
-          </FilterButton>
-        </FilterContainer>
       </Header>
 
       <StatGrid>
@@ -618,16 +508,16 @@ export default function AchatsStats() {
           <StatLabel>Montant Total</StatLabel>
         </StatCard>
         <StatCard>
-          <StatValue>{stats.moyenneQuantite}g</StatValue>
-          <StatLabel>Quantité Moyenne par Achat</StatLabel>
+          <StatValue>{stats.prixMoyenParGramme}€/g</StatValue>
+          <StatLabel>Prix Moyen par Gramme</StatLabel>
         </StatCard>
         <StatCard>
-          <StatValue>{stats.moyennePrix}€</StatValue>
-          <StatLabel>Prix Moyen par Achat</StatLabel>
-        </StatCard>
-        <StatCard>
-          <StatValue>{stats.frequenceAchats} jours</StatValue>
-          <StatLabel>Fréquence Moyenne des Achats</StatLabel>
+          <StatValue>
+            {stats.dernierAchatQuantite}g - {stats.dernierAchatPrix}€
+          </StatValue>
+          <StatLabel>
+            Dernier Achat ({stats.dernierAchat ? stats.dernierAchat.toLocaleDateString('fr-FR') : '-'})
+          </StatLabel>
         </StatCard>
       </StatGrid>
 

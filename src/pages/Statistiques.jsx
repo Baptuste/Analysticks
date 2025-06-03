@@ -3,16 +3,13 @@ import {
   Home, 
   Hash, 
   Leaf, 
-  PieChart as PieChartIcon,
-  Ruler,
-  ArrowUp
+  PieChartIcon,
+  Ruler
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
   PieChart, Pie, ResponsiveContainer,
-  BarChart, Bar, XAxis, YAxis, Tooltip,
-  ScatterChart, Scatter, AreaChart, Area, Cell, CartesianGrid,
-  LineChart, Line
+  LineChart, Line, Tooltip, Area, Cell
 } from 'recharts';
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
@@ -201,17 +198,6 @@ const CHART_COLORS = {
   accent3: '#651FFF',       // Violet accent
   accent4: '#FF6D00',       // Orange accent
   background: 'rgba(0, 230, 118, 0.1)' // Fond vert transparent
-};
-
-const CHART_GRADIENTS = {
-  primary: [
-    { offset: '0%', color: 'rgba(0, 230, 118, 0.6)' },  // Vert plus vif
-    { offset: '100%', color: 'rgba(0, 230, 118, 0.1)' }
-  ],
-  secondary: [
-    { offset: '0%', color: 'rgba(0, 176, 255, 0.6)' },  // Bleu plus vif
-    { offset: '100%', color: 'rgba(0, 176, 255, 0.1)' }
-  ]
 };
 
 // Palette de couleurs pour les éléments
@@ -462,31 +448,47 @@ export default function Statistiques() {
       try {
         const entries = await supabaseHelper.getAllEntries();
         
-        // Grouper les données par jour
-        const dailyConsumption = entries.reduce((acc, entry) => {
-          const date = new Date(entry.timestamp);
+        // Créer un objet pour stocker les données par jour
+        const dailyConsumption = {};
+        
+        // Trouver la première et la dernière date
+        const dates = entries.map(entry => new Date(entry.timestamp));
+        const firstDate = new Date(Math.min(...dates));
+        const lastDate = new Date(Math.max(...dates));
+        
+        // Créer une entrée pour chaque jour entre la première et la dernière date
+        const currentDate = new Date(firstDate);
+        while (currentDate <= lastDate) {
+          const date = new Date(currentDate);
           const monthName = new Intl.DateTimeFormat('fr-FR', { 
             month: 'long'
           }).format(date);
           const dayLabel = `${date.getDate()} ${monthName}`;
           const monthKey = `${date.getFullYear()}-${date.getMonth()}`; // Clé unique pour chaque mois
           
-          if (!acc[dayLabel]) {
-            acc[dayLabel] = {
-              day: dayLabel,
-              count: 0,
-              x: monthName.charAt(0).toUpperCase() + monthName.slice(1),
-              y: 0,
-              timestamp: date,
-              monthKey
-            };
-          }
+          dailyConsumption[dayLabel] = {
+            day: dayLabel,
+            count: 0,
+            x: monthName.charAt(0).toUpperCase() + monthName.slice(1),
+            y: 0,
+            timestamp: new Date(date),
+            monthKey
+          };
           
-          acc[dayLabel].count += 1;
-          acc[dayLabel].y = acc[dayLabel].count;
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+        
+        // Ajouter les entrées existantes
+        entries.forEach(entry => {
+          const date = new Date(entry.timestamp);
+          const monthName = new Intl.DateTimeFormat('fr-FR', { 
+            month: 'long'
+          }).format(date);
+          const dayLabel = `${date.getDate()} ${monthName}`;
           
-          return acc;
-        }, {});
+          dailyConsumption[dayLabel].count += 1;
+          dailyConsumption[dayLabel].y = dailyConsumption[dayLabel].count;
+        });
 
         const processedDailyData = Object.values(dailyConsumption)
           .sort((a, b) => a.timestamp - b.timestamp)
