@@ -500,6 +500,17 @@ export default function Statistiques() {
           }).format(date);
           const dayLabel = `${date.getDate()} ${monthName}`;
           
+          // Initialiser l'objet s'il n'existe pas
+          if (!dailyConsumption[dayLabel]) {
+            dailyConsumption[dayLabel] = {
+              x: dayLabel,
+              y: 0,
+              count: 0,
+              day: date.toISOString().split('T')[0],
+              monthKey: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+            };
+          }
+          
           dailyConsumption[dayLabel].count += 1;
           dailyConsumption[dayLabel].y = dailyConsumption[dayLabel].count;
         });
