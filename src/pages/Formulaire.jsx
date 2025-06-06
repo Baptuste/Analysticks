@@ -5,9 +5,9 @@ import { Home, Plus, Star, Edit, List, Check, ShoppingCart } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
 import Particles from 'react-tsparticles';
 import { loadSlim } from 'tsparticles-slim';
-import VarietePopup from '../components/VarietePopup.jsx';
+import VarietePopup from '../components/VarietePopup';
 import { supabaseHelper } from '../lib/supabase';
-import AchatPopup from '../components/AchatPopup.jsx';
+import AchatPopup from '../components/AchatPopup';
 
 const particlesInit = async (main) => {
   await loadSlim(main);
