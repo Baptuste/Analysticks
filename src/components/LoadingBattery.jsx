@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const fillAnimation = keyframes`
@@ -55,4 +54,4 @@ const LoadingBattery = () => {
   );
 };
 
-export default LoadingBattery; 
+export default LoadingBattery;

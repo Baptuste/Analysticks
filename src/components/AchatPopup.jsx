@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { log } from '../utils/logger';
 import styled from 'styled-components';
 import { supabaseHelper } from '../lib/supabase';
 import { X } from 'lucide-react';
@@ -98,7 +99,7 @@ const Button = styled.button`
   font-weight: bold;
   margin-top: 1rem;
   transition: all 0.3s ease;
-  
+
   &:hover {
     background: #00ffaa;
     transform: translateY(-2px);
@@ -121,14 +122,19 @@ const SuccessMessage = styled.p`
   margin-top: 0.5rem;
 `;
 
-export default function AchatPopup({ isOpen, onClose, varietes, onAchatComplete }) {
+export default function AchatPopup({
+  isOpen,
+  onClose,
+  varietes,
+  onAchatComplete,
+}) {
   const [varieteId, setVarieteId] = useState('');
   const [quantite, setQuantite] = useState('');
   const [prix, setPrix] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -139,10 +145,10 @@ export default function AchatPopup({ isOpen, onClose, varietes, onAchatComplete 
     }
 
     try {
-      const { data, error } = await supabaseHelper.addAchat({
+      const { error } = await supabaseHelper.addAchat({
         variete_id: varieteId,
         quantite: parseFloat(quantite),
-        prix: parseFloat(prix)
+        prix: parseFloat(prix),
       });
 
       if (error) throw error;
@@ -160,10 +166,13 @@ export default function AchatPopup({ isOpen, onClose, varietes, onAchatComplete 
         onClose();
         setSuccess('');
       }, 1500);
-
     } catch (err) {
-      console.error('Erreur lors de l\'enregistrement de l\'achat:', err);
-      setError(err.message || 'Une erreur est survenue lors de l\'enregistrement');
+      log.error("Erreur lors de l'enregistrement de l'achat:", {
+        error: err.message,
+      });
+      setError(
+        err.message || "Une erreur est survenue lors de l'enregistrement"
+      );
     }
   };
 
@@ -175,19 +184,19 @@ export default function AchatPopup({ isOpen, onClose, varietes, onAchatComplete 
         <CloseButton onClick={onClose}>
           <X size={24} />
         </CloseButton>
-        
+
         <h2 style={{ color: '#00ff88', marginBottom: '1rem' }}>Nouvel Achat</h2>
-        
+
         <Form onSubmit={handleSubmit}>
           <FormGroup>
             <Label>Variété *</Label>
             <Select
               value={varieteId}
-              onChange={(e) => setVarieteId(e.target.value)}
+              onChange={e => setVarieteId(e.target.value)}
               required
             >
               <option value="">Sélectionnez une variété</option>
-              {varietes.map((v) => (
+              {varietes.map(v => (
                 <option key={v.id} value={v.id}>
                   {v.nom} ({v.type}){v.origine ? ` - ${v.origine}` : ''}
                 </option>
@@ -202,7 +211,7 @@ export default function AchatPopup({ isOpen, onClose, varietes, onAchatComplete 
               step="0.01"
               min="0"
               value={quantite}
-              onChange={(e) => setQuantite(e.target.value)}
+              onChange={e => setQuantite(e.target.value)}
               placeholder="Quantité"
               required
             />
@@ -215,13 +224,13 @@ export default function AchatPopup({ isOpen, onClose, varietes, onAchatComplete 
               step="0.01"
               min="0"
               value={prix}
-              onChange={(e) => setPrix(e.target.value)}
+              onChange={e => setPrix(e.target.value)}
               placeholder="Prix"
               required
             />
           </FormGroup>
 
-          <Button type="submit">Enregistrer l'achat</Button>
+          <Button type="submit">Enregistrer l&apos;achat</Button>
         </Form>
 
         {error && <ErrorMessage>{error}</ErrorMessage>}
@@ -229,4 +238,4 @@ export default function AchatPopup({ isOpen, onClose, varietes, onAchatComplete 
       </PopupContent>
     </PopupOverlay>
   );
-} 
+}

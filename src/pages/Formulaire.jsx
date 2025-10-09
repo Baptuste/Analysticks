@@ -1,7 +1,17 @@
-import React, { useState, useEffect } from 'react';
+// Remplacement: console.error → log.error
+import { useState, useEffect } from 'react';
+import { log } from '../utils/logger';
 import styles from './Formulaire.module.css';
 import styled from 'styled-components';
-import { Home, Plus, Star, Edit, List, Check, ShoppingCart } from 'lucide-react';
+import {
+  Home,
+  Plus,
+  Star,
+  Edit,
+  List,
+  Check,
+  ShoppingCart,
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Particles from 'react-tsparticles';
 import { loadSlim } from 'tsparticles-slim';
@@ -9,7 +19,7 @@ import VarietePopup from '../components/VarietePopup';
 import { supabaseHelper } from '../lib/supabase';
 import AchatPopup from '../components/AchatPopup';
 
-const particlesInit = async (main) => {
+const particlesInit = async main => {
   await loadSlim(main);
 };
 
@@ -22,28 +32,28 @@ const particlesOptions = {
     shape: { type: 'circle' },
     opacity: {
       value: 0.6,
-      anim: { enable: true, speed: 0.3, opacity_min: 0.2, sync: false }
+      anim: { enable: true, speed: 0.3, opacity_min: 0.2, sync: false },
     },
     size: {
       value: 2.5,
       random: true,
-      anim: { enable: true, speed: 2, size_min: 0.5, sync: false }
+      anim: { enable: true, speed: 2, size_min: 0.5, sync: false },
     },
     move: {
       enable: true,
       speed: 0.5,
       direction: 'none',
-      outModes: { default: 'bounce' }
+      outModes: { default: 'bounce' },
     },
     twinkle: {
       particles: {
         enable: true,
         color: '#00ffcc',
         frequency: 0.1,
-        opacity: 1
-      }
-    }
-  }
+        opacity: 1,
+      },
+    },
+  },
 };
 
 const StarRatingContainer = styled.div`
@@ -58,8 +68,10 @@ const StarButton = styled.button`
   border: none;
   padding: 0;
   cursor: pointer;
-  color: ${props => props.$active ? '#00ff88' : '#333'};
-  transition: transform 0.2s ease, color 0.2s ease;
+  color: ${props => (props.$active ? '#00ff88' : '#333')};
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
 
   &:hover {
     transform: scale(1.2);
@@ -184,7 +196,11 @@ const ConfirmationIcon = styled.div`
   }
 
   @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
       transform: translateY(0);
     }
     40% {
@@ -246,13 +262,6 @@ const Title = styled.h1`
   text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
 `;
 
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-  justify-content: center;
-`;
-
 const ActionButton = styled.button`
   background: none;
   border: 2px solid #00ff88;
@@ -295,11 +304,11 @@ const SelectWrapper = styled.div`
   padding-right: 8px;
 
   select {
-  width: 100%;
+    width: 100%;
     padding: 12px;
     border: none;
-  background: transparent;
-  color: white;
+    background: transparent;
+    color: white;
     outline: none;
     font-size: 1rem;
     margin: 0;
@@ -308,8 +317,8 @@ const SelectWrapper = styled.div`
     appearance: none;
     cursor: pointer;
 
-  option {
-    background: #1a1a1a;
+    option {
+      background: #1a1a1a;
       padding: 10px;
     }
 
@@ -354,8 +363,10 @@ export default function Formulaire() {
           setVarietes([]);
         }
       } catch (error) {
-        console.error('Erreur lors de la récupération des variétés:', error);
-        setError('❌ Impossible de charger les variétés. Veuillez vérifier votre connexion et réessayer.');
+        log.error('Erreur lors de la récupération des variétés:', error);
+        setError(
+          '❌ Impossible de charger les variétés. Veuillez vérifier votre connexion et réessayer.'
+        );
         setVarietes([]);
       }
     };
@@ -370,7 +381,10 @@ export default function Formulaire() {
           setLastSubmissionDate(new Date(lastEntry.timestamp));
         }
       } catch (error) {
-        console.error('Erreur lors de la récupération de la dernière soumission:', error);
+        log.error(
+          'Erreur lors de la récupération de la dernière soumission:',
+          error
+        );
         // Ne pas afficher d'erreur à l'utilisateur si c'est la première utilisation
       }
     };
@@ -430,7 +444,7 @@ export default function Formulaire() {
     return true;
   };
 
-  const formatDate = (date) => {
+  const formatDate = date => {
     if (!date) return '';
     return new Intl.DateTimeFormat('fr-FR', {
       day: '2-digit',
@@ -438,7 +452,7 @@ export default function Formulaire() {
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit'
+      second: '2-digit',
     }).format(date);
   };
 
@@ -457,13 +471,13 @@ export default function Formulaire() {
         longueur: isFreeInput ? customLongueur.trim() : longueur,
         largeur: isFreeInput ? customLargeur.trim() : largeur,
         varieteId,
-        rating: rating || null
+        rating: rating || null,
       };
 
       await supabaseHelper.addEntry(entryData);
       setLastSubmissionDate(new Date());
       setShowConfirmation(true);
-      
+
       setTimeout(() => {
         setShowConfirmation(false);
         resetForm();
@@ -471,12 +485,14 @@ export default function Formulaire() {
 
       setMessage('✅ Données envoyées avec succès !');
     } catch (error) {
-      console.error('Erreur lors de l\'envoi des données:', error);
-      setError(error.message || 'Une erreur est survenue lors de l\'envoi des données');
+      log.error("Erreur lors de l'envoi des données:", error);
+      setError(
+        error.message || "Une erreur est survenue lors de l'envoi des données"
+      );
     }
   };
 
-  const handleAddVariete = async (newVariete) => {
+  const handleAddVariete = async newVariete => {
     if (!newVariete) {
       setError('La variété est requise');
       return;
@@ -486,8 +502,8 @@ export default function Formulaire() {
       setVarietes(prev => [...prev, newVariete]);
       setError('');
     } catch (error) {
-      console.error('Erreur lors de l\'ajout de la variété:', error);
-      setError(error.message || 'Erreur lors de l\'ajout de la variété');
+      log.error("Erreur lors de l'ajout de la variété:", error);
+      setError(error.message || "Erreur lors de l'ajout de la variété");
     }
   };
 
@@ -506,17 +522,24 @@ export default function Formulaire() {
     <div className={styles.formulaireContainer}>
       {lastSubmissionDate && (
         <ScrollingBanner>
-          <span>
-            🕒 Dernier envoi le : {formatDate(lastSubmissionDate)}
-          </span>
+          <span>🕒 Dernier envoi le : {formatDate(lastSubmissionDate)}</span>
         </ScrollingBanner>
       )}
-      <Particles id="tsparticles" init={particlesInit} options={particlesOptions} className={styles.particles} />
+      <Particles
+        id="tsparticles"
+        init={particlesInit}
+        options={particlesOptions}
+        className={styles.particles}
+      />
       <button onClick={() => navigate('/')} className={styles.homeButton}>
         <Home size={24} color="#00ff88" />
       </button>
 
-      <img src="/logo-analysticks.png" alt="Logo Analysticks" className={styles.logoGlow} />
+      <img
+        src="/logo-analysticks.png"
+        alt="Logo Analysticks"
+        className={styles.logoGlow}
+      />
       <Title>Analysticks</Title>
 
       <InputModeToggle onClick={toggleInputMode}>
@@ -534,37 +557,59 @@ export default function Formulaire() {
       </InputModeToggle>
 
       <div className={styles.fieldGroup}>
-        <label>Répartition :</label>
+        <label htmlFor="repartition">Répartition :</label>
         {isFreeInput ? (
           <FreeInput
+            id="repartition"
             type="text"
             value={customRepartition}
-            onChange={(e) => setCustomRepartition(e.target.value)}
+            onChange={e => setCustomRepartition(e.target.value)}
             placeholder="Entrez la répartition"
           />
         ) : (
-          <select value={repartition} onChange={(e) => setRepartition(e.target.value)}>
+          <select
+            id="repartition"
+            value={repartition}
+            onChange={e => setRepartition(e.target.value)}
+          >
             <option value="" hidden></option>
-            {['Pure', '10/90', '20/80', '30/70', '40/60', '50/50', '60/40', '70/30', 'Mixte'].map((opt) => (
-              <option key={opt} value={opt}>{opt}</option>
+            {[
+              'Pure',
+              '10/90',
+              '20/80',
+              '30/70',
+              '40/60',
+              '50/50',
+              '60/40',
+              '70/30',
+              'Mixte',
+            ].map(opt => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
             ))}
           </select>
         )}
       </div>
 
       <div className={styles.fieldGroup}>
-        <label>Longueur :</label>
+        <label htmlFor="longueur">Longueur :</label>
         {isFreeInput ? (
           <FreeInput
+            id="longueur"
             type="text"
             value={customLongueur}
-            onChange={(e) => setCustomLongueur(e.target.value)}
+            onChange={e => setCustomLongueur(e.target.value)}
             placeholder="Entrez la longueur"
           />
         ) : (
-          <select value={longueur} onChange={(e) => setLongueur(e.target.value)}>
+          <select
+            id="longueur"
+            value={longueur}
+            onChange={e => setLongueur(e.target.value)}
+          >
             <option value="" hidden></option>
-            {['Petit', 'Moyen -', 'Moyen', 'Moyen +', 'Long'].map((opt) => (
+            {['Petit', 'Moyen -', 'Moyen', 'Moyen +', 'Long'].map(opt => (
               <option key={opt}>{opt}</option>
             ))}
           </select>
@@ -572,18 +617,23 @@ export default function Formulaire() {
       </div>
 
       <div className={styles.fieldGroup}>
-        <label>Largeur :</label>
+        <label htmlFor="largeur">Largeur :</label>
         {isFreeInput ? (
           <FreeInput
+            id="largeur"
             type="text"
             value={customLargeur}
-            onChange={(e) => setCustomLargeur(e.target.value)}
+            onChange={e => setCustomLargeur(e.target.value)}
             placeholder="Entrez la largeur"
           />
         ) : (
-          <select value={largeur} onChange={(e) => setLargeur(e.target.value)}>
+          <select
+            id="largeur"
+            value={largeur}
+            onChange={e => setLargeur(e.target.value)}
+          >
             <option value="" hidden></option>
-            {['Skinny', 'Normal -', 'Normal', 'Normal +', 'Bien'].map((opt) => (
+            {['Skinny', 'Normal -', 'Normal', 'Normal +', 'Bien'].map(opt => (
               <option key={opt}>{opt}</option>
             ))}
           </select>
@@ -592,11 +642,11 @@ export default function Formulaire() {
 
       <div className={styles.fieldGroup}>
         <RatingLabel>
-          <label>Note :</label>
+          <label htmlFor="rating">Note :</label>
           <RatingValue>{rating ? `${rating}/5` : 'Non noté'}</RatingValue>
         </RatingLabel>
         <StarRatingContainer>
-          {[1, 2, 3, 4, 5].map((star) => (
+          {[1, 2, 3, 4, 5].map(star => (
             <StarButton
               key={star}
               onClick={() => setRating(star === rating ? 0 : star)}
@@ -606,8 +656,8 @@ export default function Formulaire() {
               type="button"
               aria-label={`Noter ${star} étoile${star > 1 ? 's' : ''}`}
             >
-              <Star 
-                size={24} 
+              <Star
+                size={24}
                 fill={star <= (hoveredRating || rating) ? '#00ff88' : 'none'}
                 stroke={star <= (hoveredRating || rating) ? '#00ff88' : '#333'}
               />
@@ -617,21 +667,22 @@ export default function Formulaire() {
       </div>
 
       <div className={styles.fieldGroup}>
-        <label>Variété :</label>
-          <SelectContainer>
-            <SelectWrapper>
-            <select 
-                value={varieteId} 
-                onChange={(e) => setVarieteId(e.target.value)}
-              >
+        <label htmlFor="variete">Variété :</label>
+        <SelectContainer>
+          <SelectWrapper>
+            <select
+              id="variete"
+              value={varieteId}
+              onChange={e => setVarieteId(e.target.value)}
+            >
               <option value=""></option>
-                {varietes.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.nom} ({v.type}){v.origine ? ` - ${v.origine}` : ''}
-                  </option>
-                ))}
+              {varietes.map(v => (
+                <option key={v.id} value={v.id}>
+                  {v.nom} ({v.type}){v.origine ? ` - ${v.origine}` : ''}
+                </option>
+              ))}
             </select>
-            </SelectWrapper>
+          </SelectWrapper>
           <ActionButton
             onClick={() => setIsPopupOpen(true)}
             title="Ajouter une variété"
@@ -644,13 +695,13 @@ export default function Formulaire() {
             title="Nouvel achat"
             type="button"
           >
-                <ShoppingCart size={18} color="#00ff88" />
+            <ShoppingCart size={18} color="#00ff88" />
           </ActionButton>
-          </SelectContainer>
+        </SelectContainer>
       </div>
 
-      <button 
-        className={styles.smokeButton} 
+      <button
+        className={styles.smokeButton}
         onClick={handleSubmit}
         disabled={puffVisible}
       >
@@ -668,7 +719,9 @@ export default function Formulaire() {
             <ConfirmationIcon>
               <Check />
             </ConfirmationIcon>
-            <ConfirmationMessage>Données enregistrées avec succès !</ConfirmationMessage>
+            <ConfirmationMessage>
+              Données enregistrées avec succès !
+            </ConfirmationMessage>
           </ConfirmationContent>
         </ConfirmationOverlay>
       )}

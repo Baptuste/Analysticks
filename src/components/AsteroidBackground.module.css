@@ -53,37 +53,85 @@
 }
 
 /* Directions */
-.fall-down    { animation-name: fallDown; }
-.fall-up      { animation-name: fallUp; }
-.fall-left    { animation-name: fallLeft; }
-.fall-right   { animation-name: fallRight; }
-.fall-diag-1  { animation-name: fallDiag1; }
-.fall-diag-2  { animation-name: fallDiag2; }
+.fall-down {
+  animation-name: fallDown;
+}
+.fall-up {
+  animation-name: fallUp;
+}
+.fall-left {
+  animation-name: fallLeft;
+}
+.fall-right {
+  animation-name: fallRight;
+}
+.fall-diag-1 {
+  animation-name: fallDiag1;
+}
+.fall-diag-2 {
+  animation-name: fallDiag2;
+}
 
 /* Keyframes */
 @keyframes fallDown {
-  0%   { transform: translateY(-150vh) rotate(0deg); opacity: 0.2; }
-  100% { transform: translateY(150vh) rotate(360deg); opacity: 1; }
+  0% {
+    transform: translateY(-150vh) rotate(0deg);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(150vh) rotate(360deg);
+    opacity: 1;
+  }
 }
 @keyframes fallUp {
-  0%   { transform: translateY(150vh) rotate(0deg); opacity: 0.2; }
-  100% { transform: translateY(-150vh) rotate(-360deg); opacity: 1; }
+  0% {
+    transform: translateY(150vh) rotate(0deg);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-150vh) rotate(-360deg);
+    opacity: 1;
+  }
 }
 @keyframes fallLeft {
-  0%   { transform: translateX(150vw) rotate(0deg); opacity: 0.2; }
-  100% { transform: translateX(-150vw) rotate(-360deg); opacity: 1; }
+  0% {
+    transform: translateX(150vw) rotate(0deg);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateX(-150vw) rotate(-360deg);
+    opacity: 1;
+  }
 }
 @keyframes fallRight {
-  0%   { transform: translateX(-150vw) rotate(0deg); opacity: 0.2; }
-  100% { transform: translateX(150vw) rotate(360deg); opacity: 1; }
+  0% {
+    transform: translateX(-150vw) rotate(0deg);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateX(150vw) rotate(360deg);
+    opacity: 1;
+  }
 }
 @keyframes fallDiag1 {
-  0%   { transform: translate(-150vw, -150vh) rotate(0deg); opacity: 0.2; }
-  100% { transform: translate(150vw, 150vh) rotate(360deg); opacity: 1; }
+  0% {
+    transform: translate(-150vw, -150vh) rotate(0deg);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translate(150vw, 150vh) rotate(360deg);
+    opacity: 1;
+  }
 }
 @keyframes fallDiag2 {
-  0%   { transform: translate(150vw, -150vh) rotate(0deg); opacity: 0.2; }
-  100% { transform: translate(-150vw, 150vh) rotate(-360deg); opacity: 1; }
+  0% {
+    transform: translate(150vw, -150vh) rotate(0deg);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translate(-150vw, 150vh) rotate(-360deg);
+    opacity: 1;
+  }
 }
 
 /* 🌈 COULEURS SPÉCIALES */

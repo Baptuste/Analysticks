@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import styled from 'styled-components';
@@ -44,7 +43,7 @@ const Logo = styled.img`
   max-width: 300px;
   height: auto;
   margin: 2rem 0;
-  
+
   @media (max-width: 768px) {
     width: 70%;
     margin: 1.5rem 0;
@@ -57,7 +56,7 @@ const Title = styled.h1`
   text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
   margin: 0;
   text-align: center;
-  
+
   @media (max-width: 768px) {
     font-size: 2.2rem;
   }
@@ -69,7 +68,7 @@ const ButtonContainer = styled.div`
   margin-top: 2rem;
   width: 100%;
   justify-content: center;
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: stretch;
@@ -92,7 +91,7 @@ const NavButton = styled.button`
   cursor: pointer;
   transition: all 0.3s ease;
   min-width: 160px;
-  
+
   @media (max-width: 768px) {
     width: 100%;
     padding: 1rem;
@@ -116,7 +115,7 @@ export default function Accueil() {
   return (
     <MobileContainer>
       <AsteroidBackground />
-      
+
       <ContentWrapper>
         <Title>Analysticks</Title>
         <Logo src="/logo-analysticks.png" alt="Logo" />

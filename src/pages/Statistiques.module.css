@@ -114,7 +114,8 @@
   box-shadow: 0 0 10px #00ffaa33;
 }
 
-.scoreHeader, .scoreRow {
+.scoreHeader,
+.scoreRow {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   padding: 0.4rem 0.2rem;
@@ -152,15 +153,27 @@
 }
 
 @keyframes pulseGreen {
-  0% { text-shadow: 0 0 5px #00ff88; }
-  50% { text-shadow: 0 0 15px #00ff88; }
-  100% { text-shadow: 0 0 5px #00ff88; }
+  0% {
+    text-shadow: 0 0 5px #00ff88;
+  }
+  50% {
+    text-shadow: 0 0 15px #00ff88;
+  }
+  100% {
+    text-shadow: 0 0 5px #00ff88;
+  }
 }
 
 @keyframes pulseRed {
-  0% { text-shadow: 0 0 5px #ff5555; }
-  50% { text-shadow: 0 0 15px #ff5555; }
-  100% { text-shadow: 0 0 5px #ff5555; }
+  0% {
+    text-shadow: 0 0 5px #ff5555;
+  }
+  50% {
+    text-shadow: 0 0 15px #ff5555;
+  }
+  100% {
+    text-shadow: 0 0 5px #ff5555;
+  }
 }
 
 .highlight {

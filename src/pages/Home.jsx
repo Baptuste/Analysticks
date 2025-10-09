@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { PlusCircle, BarChart } from 'lucide-react';
@@ -70,4 +69,4 @@ export default function Home() {
       </ButtonContainer>
     </Container>
   );
-} 
+}

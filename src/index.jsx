@@ -10,29 +10,29 @@ import Accueil from './pages/Accueil';
 const router = createBrowserRouter(
   [
     {
-      path: "/",
+      path: '/',
       element: <App />,
       children: [
         {
           index: true,
-          element: <Accueil />
+          element: <Accueil />,
         },
         {
-          path: "formulaire",
-          element: <Formulaire />
+          path: 'formulaire',
+          element: <Formulaire />,
         },
         {
-          path: "stats",
-          element: <Statistiques />
-        }
-      ]
-    }
+          path: 'stats',
+          element: <Statistiques />,
+        },
+      ],
+    },
   ],
   {
     future: {
       v7_startTransition: true,
-      v7_relativeSplatPath: true
-    }
+      v7_relativeSplatPath: true,
+    },
   }
 );
 
@@ -41,4 +41,4 @@ root.render(
   <React.StrictMode>
     <RouterProvider router={router} />
   </React.StrictMode>
-); 
+);

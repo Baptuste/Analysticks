@@ -1,8 +1,8 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Formulaire from './pages/Formulaire';
 import Statistiques from './pages/Statistiques';
+import LogViewer from './components/LogViewer';
 
 function App() {
   return (
@@ -12,8 +12,9 @@ function App() {
         <Route path="/formulaire" element={<Formulaire />} />
         <Route path="/stats" element={<Statistiques />} />
       </Routes>
+      <LogViewer />
     </Router>
   );
 }
 
-export default App; 
+export default App;

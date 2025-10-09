@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { 
-  Home, 
-  Hash, 
-  Leaf, 
-  PieChartIcon,
-  Ruler
-} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { log } from '../utils/logger';
+import { Home, Hash, Leaf, PieChartIcon, Ruler } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
-  PieChart, Pie, ResponsiveContainer,
-  LineChart, Line, Tooltip, Area, Cell
+  PieChart,
+  Pie,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  Tooltip,
+  Area,
+  Cell,
 } from 'recharts';
-import Particles from "react-tsparticles";
-import { loadSlim } from "tsparticles-slim";
+import Particles from 'react-tsparticles';
+import { loadSlim } from 'tsparticles-slim';
 import styles from './Statistiques.module.css';
 import { supabaseHelper } from '../lib/supabase';
 import styled from 'styled-components';
@@ -20,42 +21,42 @@ import AchatsStats from '../components/AchatsStats.jsx';
 import LoadingBattery from '../components/LoadingBattery.jsx';
 
 // Initialisation des particules pour l'effet visuel
-const particlesInit = async (main) => {
+const particlesInit = async main => {
   await loadSlim(main);
 };
 
 // Paramétrage des particules
 const particlesOptions = {
   fullScreen: { enable: true, zIndex: 0 },
-  background: { color: { value: "transparent" } },
+  background: { color: { value: 'transparent' } },
   particles: {
     number: { value: 80 },
-    color: { value: ["#00ffcc", "#00ffaa", "#88ffee"] },
-    shape: { type: "circle" },
+    color: { value: ['#00ffcc', '#00ffaa', '#88ffee'] },
+    shape: { type: 'circle' },
     opacity: {
       value: 0.7,
-      anim: { enable: true, speed: 0.3, opacity_min: 0.3, sync: false }
+      anim: { enable: true, speed: 0.3, opacity_min: 0.3, sync: false },
     },
     size: {
       value: 2.5,
       random: true,
-      anim: { enable: true, speed: 1.5, size_min: 0.5, sync: false }
+      anim: { enable: true, speed: 1.5, size_min: 0.5, sync: false },
     },
     move: {
       enable: true,
       speed: 0.5,
-      direction: "none",
-      outModes: { default: "bounce" }
+      direction: 'none',
+      outModes: { default: 'bounce' },
     },
     twinkle: {
       particles: {
         enable: true,
-        color: "#00ffcc",
+        color: '#00ffcc',
         frequency: 0.1,
-        opacity: 1
-      }
-    }
-  }
+        opacity: 1,
+      },
+    },
+  },
 };
 
 const KPIContainer = styled.div`
@@ -65,7 +66,7 @@ const KPIContainer = styled.div`
   margin: 1rem auto;
   max-width: 1200px;
   width: calc(100% - 2rem);
-  
+
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
@@ -76,7 +77,7 @@ const KPIContainer = styled.div`
 
 // Conteneur spécial pour les statistiques d'achat
 const AchatsContainer = styled.div`
-  grid-column: 1 / -1;  // Prend toute la largeur
+  grid-column: 1 / -1; // Prend toute la largeur
   margin-top: 1rem;
 `;
 
@@ -192,50 +193,50 @@ const ChartContainer = styled.div`
 
 // Palette de couleurs pour les graphiques
 const CHART_COLORS = {
-  primary: '#00E676',       // Vert vif principal
-  secondary: '#00B0FF',     // Bleu clair secondaire
-  accent1: '#FF4081',       // Rose accent
-  accent2: '#FFD740',       // Jaune doré accent
-  accent3: '#651FFF',       // Violet accent
-  accent4: '#FF6D00',       // Orange accent
-  background: 'rgba(0, 230, 118, 0.1)' // Fond vert transparent
+  primary: '#00E676', // Vert vif principal
+  secondary: '#00B0FF', // Bleu clair secondaire
+  accent1: '#FF4081', // Rose accent
+  accent2: '#FFD740', // Jaune doré accent
+  accent3: '#651FFF', // Violet accent
+  accent4: '#FF6D00', // Orange accent
+  background: 'rgba(0, 230, 118, 0.1)', // Fond vert transparent
 };
 
 // Palette de couleurs pour les éléments
 const ELEMENT_COLORS = {
   types: {
-    'Beuh': '#00E676',      // Vert vif
-    'Mousseux': '#00B0FF',  // Bleu clair vif
-    'Dry': '#FF4081',       // Rose vif
-    'Frozen': '#40C4FF',    // Bleu ciel
-    'Static': '#FFD740',    // Jaune doré
-    'Autres': '#78909C'     // Gris bleuté
+    Beuh: '#00E676', // Vert vif
+    Mousseux: '#00B0FF', // Bleu clair vif
+    Dry: '#FF4081', // Rose vif
+    Frozen: '#40C4FF', // Bleu ciel
+    Static: '#FFD740', // Jaune doré
+    Autres: '#78909C', // Gris bleuté
   },
   repartitions: {
-    'Pure': '#FF1744',      // Rouge vif
-    '10/90': '#FF4081',     // Rose
-    '20/80': '#F50057',     // Rose foncé
-    '30/70': '#D500F9',     // Violet
-    '40/60': '#651FFF',     // Violet foncé
-    '50/50': '#3D5AFE',     // Bleu indigo
-    '60/40': '#2979FF',     // Bleu vif
-    '70/30': '#00B0FF',     // Bleu clair
-    'Mixte': '#00E5FF'      // Cyan
+    Pure: '#FF1744', // Rouge vif
+    '10/90': '#FF4081', // Rose
+    '20/80': '#F50057', // Rose foncé
+    '30/70': '#D500F9', // Violet
+    '40/60': '#651FFF', // Violet foncé
+    '50/50': '#3D5AFE', // Bleu indigo
+    '60/40': '#2979FF', // Bleu vif
+    '70/30': '#00B0FF', // Bleu clair
+    Mixte: '#00E5FF', // Cyan
   },
   longueurs: {
-    'Petit': '#FF6B6B',     // Rouge corail
-    'Moyen -': '#4ECDC4',   // Turquoise vif
-    'Moyen': '#FFD93D',     // Jaune soleil
-    'Moyen +': '#6C5CE7',   // Violet électrique
-    'Long': '#A8E6CF'       // Vert menthe
+    Petit: '#FF6B6B', // Rouge corail
+    'Moyen -': '#4ECDC4', // Turquoise vif
+    Moyen: '#FFD93D', // Jaune soleil
+    'Moyen +': '#6C5CE7', // Violet électrique
+    Long: '#A8E6CF', // Vert menthe
   },
   largeurs: {
-    'Skinny': '#FF8066',    // Corail vif
-    'Normal -': '#45B7D1',  // Bleu océan
-    'Normal': '#96E6A1',    // Vert prairie
-    'Normal +': '#D4A5FF',  // Violet lavande
-    'Bien': '#FFB480'       // Orange pêche
-  }
+    Skinny: '#FF8066', // Corail vif
+    'Normal -': '#45B7D1', // Bleu océan
+    Normal: '#96E6A1', // Vert prairie
+    'Normal +': '#D4A5FF', // Violet lavande
+    Bien: '#FFB480', // Orange pêche
+  },
 };
 
 const CustomTooltip = styled.div`
@@ -251,14 +252,14 @@ const CustomTooltip = styled.div`
     padding: 8px;
     font-size: 0.8rem;
     max-width: 200px;
-    
+
     .tooltip-title {
       font-size: 0.85rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    
+
     .tooltip-content {
       font-size: 0.8rem;
     }
@@ -293,7 +294,9 @@ const renderCustomTooltip = ({ active, payload, label, type }) => {
           <div className="tooltip-label">
             <span>{payload[0].payload.name}</span>
           </div>
-          <div>Quantité : <span className="tooltip-value">{payload[0].value}</span></div>
+          <div>
+            Quantité : <span className="tooltip-value">{payload[0].value}</span>
+          </div>
         </>
       );
       break;
@@ -305,7 +308,9 @@ const renderCustomTooltip = ({ active, payload, label, type }) => {
           <div className="tooltip-label">
             <span>{payload[0].payload.name}</span>
           </div>
-          <div>Quantité : <span className="tooltip-value">{payload[0].value}</span></div>
+          <div>
+            Quantité : <span className="tooltip-value">{payload[0].value}</span>
+          </div>
         </>
       );
       break;
@@ -317,7 +322,9 @@ const renderCustomTooltip = ({ active, payload, label, type }) => {
           <div className="tooltip-label">
             <span>{payload[0].payload.name}</span>
           </div>
-          <div>Quantité : <span className="tooltip-value">{payload[0].value}</span></div>
+          <div>
+            Quantité : <span className="tooltip-value">{payload[0].value}</span>
+          </div>
         </>
       );
       break;
@@ -329,7 +336,9 @@ const renderCustomTooltip = ({ active, payload, label, type }) => {
           <div className="tooltip-label">
             <span>{payload[0].payload.name}</span>
           </div>
-          <div>Quantité : <span className="tooltip-value">{payload[0].value}</span></div>
+          <div>
+            Quantité : <span className="tooltip-value">{payload[0].value}</span>
+          </div>
         </>
       );
       break;
@@ -338,7 +347,10 @@ const renderCustomTooltip = ({ active, payload, label, type }) => {
       title = payload[0].payload.fullDate || label;
       content = (
         <>
-          <div>Nombre de sticks : <span className="tooltip-value">{payload[0].value}</span></div>
+          <div>
+            Nombre de sticks :{' '}
+            <span className="tooltip-value">{payload[0].value}</span>
+          </div>
         </>
       );
       break;
@@ -400,7 +412,7 @@ const ComparaisonLabel = styled.div`
 `;
 
 const ComparaisonValue = styled.div`
-  color: ${props => props.$isPositive ? '#00ff88' : '#ff3366'};
+  color: ${props => (props.$isPositive ? '#00ff88' : '#ff3366')};
   font-weight: bold;
   font-size: 1rem;
   display: flex;
@@ -414,15 +426,16 @@ const ComparaisonValue = styled.div`
 
 const calculerComparaison = (donnees, jours) => {
   if (!donnees || donnees.length === 0) return { valeur: 0, variation: 0 };
-  
+
   const maintenant = donnees[donnees.length - 1]?.y || 0;
   const precedent = donnees[donnees.length - 1 - jours]?.y || 0;
-  
-  const variation = precedent !== 0 ? ((maintenant - precedent) / precedent) * 100 : 0;
-  
+
+  const variation =
+    precedent !== 0 ? ((maintenant - precedent) / precedent) * 100 : 0;
+
   return {
     valeur: maintenant,
-    variation: Math.round(variation)
+    variation: Math.round(variation),
   };
 };
 
@@ -454,52 +467,52 @@ export default function Statistiques() {
     tendance: 0,
     typePopulaire: '',
     repartitionPopulaire: '',
-    varietePopulaire: ''
+    varietePopulaire: '',
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const entries = await supabaseHelper.getAllEntries();
-        
+
         // Créer un objet pour stocker les données par jour
         const dailyConsumption = {};
-        
+
         // Trouver la première et la dernière date
         const dates = entries.map(entry => new Date(entry.timestamp));
         const firstDate = new Date(Math.min(...dates));
         const lastDate = new Date(Math.max(...dates));
-        
+
         // Créer une entrée pour chaque jour entre la première et la dernière date
         const currentDate = new Date(firstDate);
         while (currentDate <= lastDate) {
           const date = new Date(currentDate);
-          const monthName = new Intl.DateTimeFormat('fr-FR', { 
-            month: 'long'
+          const monthName = new Intl.DateTimeFormat('fr-FR', {
+            month: 'long',
           }).format(date);
           const dayLabel = `${date.getDate()} ${monthName}`;
           const monthKey = `${date.getFullYear()}-${date.getMonth()}`; // Clé unique pour chaque mois
-          
+
           dailyConsumption[dayLabel] = {
             day: dayLabel,
             count: 0,
             x: monthName.charAt(0).toUpperCase() + monthName.slice(1),
             y: 0,
             timestamp: new Date(date),
-            monthKey
+            monthKey,
           };
-          
+
           currentDate.setDate(currentDate.getDate() + 1);
         }
-        
+
         // Ajouter les entrées existantes
         entries.forEach(entry => {
           const date = new Date(entry.timestamp);
-          const monthName = new Intl.DateTimeFormat('fr-FR', { 
-            month: 'long'
+          const monthName = new Intl.DateTimeFormat('fr-FR', {
+            month: 'long',
           }).format(date);
           const dayLabel = `${date.getDate()} ${monthName}`;
-          
+
           // Initialiser l'objet s'il n'existe pas
           if (!dailyConsumption[dayLabel]) {
             dailyConsumption[dayLabel] = {
@@ -507,10 +520,10 @@ export default function Statistiques() {
               y: 0,
               count: 0,
               day: date.toISOString().split('T')[0],
-              monthKey: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+              monthKey: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`,
             };
           }
-          
+
           dailyConsumption[dayLabel].count += 1;
           dailyConsumption[dayLabel].y = dailyConsumption[dayLabel].count;
         });
@@ -518,15 +531,15 @@ export default function Statistiques() {
         const processedDailyData = Object.values(dailyConsumption)
           .sort((a, b) => a.timestamp - b.timestamp)
           .map((item, index, array) => {
-            const isFirstOfMonth = index === 0 || 
-              item.monthKey !== array[index - 1].monthKey;
-            
-            return { 
+            const isFirstOfMonth =
+              index === 0 || item.monthKey !== array[index - 1].monthKey;
+
+            return {
               x: isFirstOfMonth ? item.x : '',
               y: item.y,
               value: item.count,
               fullDate: item.day,
-              monthKey: item.monthKey
+              monthKey: item.monthKey,
             };
           });
 
@@ -542,9 +555,9 @@ export default function Statistiques() {
 
         const processedTypesData = Object.values(typeCount)
           .sort((a, b) => b.count - a.count)
-          .map(item => ({ 
+          .map(item => ({
             name: item.type,
-            value: item.count
+            value: item.count,
           }));
 
         // Traitement des données par répartition
@@ -560,7 +573,7 @@ export default function Statistiques() {
           .sort((a, b) => b.count - a.count)
           .map(item => ({
             name: item.name,
-            value: item.count
+            value: item.count,
           }));
 
         // Traitement des données par longueur
@@ -576,7 +589,7 @@ export default function Statistiques() {
           .sort((a, b) => b.count - a.count)
           .map(item => ({
             name: item.name,
-            value: item.count
+            value: item.count,
           }));
 
         // Traitement des données par largeur
@@ -592,7 +605,7 @@ export default function Statistiques() {
           .sort((a, b) => b.count - a.count)
           .map(item => ({
             name: item.name,
-            value: item.count
+            value: item.count,
           }));
 
         // Mise à jour des états
@@ -605,21 +618,29 @@ export default function Statistiques() {
         // Calcul des KPIs
         const total = entries.length;
         const moyenneHebdo = Math.round(total / processedDailyData.length);
-        const derniereSemaine = processedDailyData[processedDailyData.length - 1]?.y || 0;
-        const semainePrecedente = processedDailyData[processedDailyData.length - 2]?.y || 0;
-        const tendance = semainePrecedente ? Math.round(((derniereSemaine - semainePrecedente) / semainePrecedente) * 100) : 0;
+        const derniereSemaine =
+          processedDailyData[processedDailyData.length - 1]?.y || 0;
+        const semainePrecedente =
+          processedDailyData[processedDailyData.length - 2]?.y || 0;
+        const tendance = semainePrecedente
+          ? Math.round(
+              ((derniereSemaine - semainePrecedente) / semainePrecedente) * 100
+            )
+          : 0;
 
         setKpis({
           total,
           moyenneHebdo,
           tendance,
           typePopulaire: processedTypesData[0]?.name || 'Inconnu',
-          repartitionPopulaire: processedRepartitionData[0]?.name || 'Inconnue'
+          repartitionPopulaire: processedRepartitionData[0]?.name || 'Inconnue',
         });
 
         setError('');
       } catch (err) {
-        console.error('Erreur lors de la récupération des données:', err);
+        log.error('Erreur lors de la récupération des données:', {
+          error: err.message,
+        });
         setError('Impossible de charger les données');
       } finally {
         setLoading(false);
@@ -629,29 +650,38 @@ export default function Statistiques() {
     fetchData();
   }, []);
 
-  if (loading) return (
-    <LoadingWrapper>
-      <LoadingBattery />
-    </LoadingWrapper>
-  );
+  if (loading)
+    return (
+      <LoadingWrapper>
+        <LoadingBattery />
+      </LoadingWrapper>
+    );
 
-  if (error) return (
-    <div className={styles.container}>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        color: '#ff5555'
-      }}>
-        Erreur : {error}
+  if (error)
+    return (
+      <div className={styles.container}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+            color: '#ff5555',
+          }}
+        >
+          Erreur : {error}
+        </div>
       </div>
-    </div>
-  );
+    );
 
   return (
     <div className={styles.container}>
-      <Particles id="tsparticles" init={particlesInit} options={particlesOptions} className={styles.particles} />
+      <Particles
+        id="tsparticles"
+        init={particlesInit}
+        options={particlesOptions}
+        className={styles.particles}
+      />
       <button className={styles.homeButton} onClick={() => navigate('/')}>
         <Home size={24} color="#00ffcc" />
       </button>
@@ -665,18 +695,22 @@ export default function Statistiques() {
             </KPIIcon>
             <KPIContent>
               <KPILabel>Total des sticks</KPILabel>
-              <div style={{ 
-                display: 'flex', 
-                alignItems: 'baseline',
-                gap: '1rem',
-                flexWrap: 'wrap'
-              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  gap: '1rem',
+                  flexWrap: 'wrap',
+                }}
+              >
                 <KPIValue>{kpis.total}</KPIValue>
-                <div style={{ 
-                  fontSize: '0.9rem', 
-                  color: '#fff', 
-                  opacity: 0.8 
-                }}>
+                <div
+                  style={{
+                    fontSize: '0.9rem',
+                    color: '#fff',
+                    opacity: 0.8,
+                  }}
+                >
                   Total
                 </div>
               </div>
@@ -684,23 +718,33 @@ export default function Statistiques() {
           </KPIHeader>
           <ChartContainer>
             <ResponsiveContainer width="100%" height={80}>
-              <LineChart 
-                data={weeklyData.slice(-30)} 
+              <LineChart
+                data={weeklyData.slice(-30)}
                 margin={{
-                  top: 5, 
-                  right: window.innerWidth <= 768 ? 5 : 10, 
-                  bottom: 5, 
-                  left: window.innerWidth <= 768 ? 5 : 10 
+                  top: 5,
+                  right: window.innerWidth <= 768 ? 5 : 10,
+                  bottom: 5,
+                  left: window.innerWidth <= 768 ? 5 : 10,
                 }}
               >
                 <defs>
                   <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={CHART_COLORS.primary} stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0}/>
+                    <stop
+                      offset="5%"
+                      stopColor={CHART_COLORS.primary}
+                      stopOpacity={0.2}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor={CHART_COLORS.primary}
+                      stopOpacity={0}
+                    />
                   </linearGradient>
                 </defs>
-                <Tooltip 
-                  content={(props) => renderCustomTooltip({ ...props, type: 'weekly' })}
+                <Tooltip
+                  content={props =>
+                    renderCustomTooltip({ ...props, type: 'weekly' })
+                  }
                   cursor={{ stroke: CHART_COLORS.primary, strokeWidth: 1 }}
                 />
                 <Area
@@ -715,17 +759,17 @@ export default function Statistiques() {
                   dataKey="y"
                   stroke={CHART_COLORS.primary}
                   strokeWidth={window.innerWidth <= 768 ? 1.5 : 2}
-                  dot={{ 
-                    fill: CHART_COLORS.primary, 
+                  dot={{
+                    fill: CHART_COLORS.primary,
                     r: window.innerWidth <= 768 ? 2 : 3,
                     strokeWidth: 1,
-                    stroke: '#fff'
+                    stroke: '#fff',
                   }}
                   activeDot={{
                     r: window.innerWidth <= 768 ? 4 : 6,
                     fill: CHART_COLORS.secondary,
                     stroke: '#fff',
-                    strokeWidth: 2
+                    strokeWidth: 2,
                   }}
                 />
               </LineChart>
@@ -734,33 +778,41 @@ export default function Statistiques() {
           <ComparaisonContainer>
             <ComparaisonItem>
               <ComparaisonLabel>vs Semaine dernière</ComparaisonLabel>
-              <ComparaisonValue $isPositive={calculerComparaison(weeklyData, 7).variation >= 0}>
+              <ComparaisonValue
+                $isPositive={calculerComparaison(weeklyData, 7).variation >= 0}
+              >
                 {calculerComparaison(weeklyData, 7).variation > 0 ? '+' : ''}
                 {calculerComparaison(weeklyData, 7).variation}%
               </ComparaisonValue>
             </ComparaisonItem>
             <ComparaisonItem>
               <ComparaisonLabel>vs Mois dernier</ComparaisonLabel>
-              <ComparaisonValue $isPositive={calculerComparaison(weeklyData, 30).variation >= 0}>
+              <ComparaisonValue
+                $isPositive={calculerComparaison(weeklyData, 30).variation >= 0}
+              >
                 {calculerComparaison(weeklyData, 30).variation > 0 ? '+' : ''}
                 {calculerComparaison(weeklyData, 30).variation}%
               </ComparaisonValue>
             </ComparaisonItem>
           </ComparaisonContainer>
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.8rem',
-            color: '#fff',
-            opacity: 0.8,
-            padding: '0 0.5rem',
-            marginTop: '0.5rem'
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.8rem',
+              color: '#fff',
+              opacity: 0.8,
+              padding: '0 0.5rem',
+              marginTop: '0.5rem',
+            }}
+          >
+            <div>Max: {Math.max(...weeklyData.slice(-30).map(d => d.y))}</div>
             <div>
-              Max: {Math.max(...weeklyData.slice(-30).map(d => d.y))}
-            </div>
-            <div>
-              Moy: {Math.round(weeklyData.slice(-30).reduce((acc, curr) => acc + curr.y, 0) / Math.min(30, weeklyData.slice(-30).length))}
+              Moy:{' '}
+              {Math.round(
+                weeklyData.slice(-30).reduce((acc, curr) => acc + curr.y, 0) /
+                  Math.min(30, weeklyData.slice(-30).length)
+              )}
             </div>
           </div>
         </KPICard>
@@ -776,27 +828,47 @@ export default function Statistiques() {
           </KPIHeader>
           <ChartContainer>
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart margin={{ top: 0, right: 0, bottom: window.innerWidth <= 768 ? 10 : 0, left: 0 }}>
+              <PieChart
+                margin={{
+                  top: 0,
+                  right: 0,
+                  bottom: window.innerWidth <= 768 ? 10 : 0,
+                  left: 0,
+                }}
+              >
                 <Pie
                   data={typesData}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  innerRadius={window.innerWidth <= 768 ? "30%" : "40%"}
-                  outerRadius={window.innerWidth <= 768 ? "85%" : "90%"}
+                  innerRadius={window.innerWidth <= 768 ? '30%' : '40%'}
+                  outerRadius={window.innerWidth <= 768 ? '85%' : '90%'}
                   paddingAngle={window.innerWidth <= 768 ? 1 : 2}
-                  label={window.innerWidth <= 768 ? false : {
-                    position: 'outside',
-                    fill: '#fff',
-                    fontSize: 12
-                  }}
+                  label={
+                    window.innerWidth <= 768
+                      ? false
+                      : {
+                          position: 'outside',
+                          fill: '#fff',
+                          fontSize: 12,
+                        }
+                  }
                 >
                   {typesData.map((entry, index) => (
-                    <Cell key={index} fill={ELEMENT_COLORS.types[entry.name] || CHART_COLORS.accent4} />
+                    <Cell
+                      key={index}
+                      fill={
+                        ELEMENT_COLORS.types[entry.name] || CHART_COLORS.accent4
+                      }
+                    />
                   ))}
                 </Pie>
-                <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'types' })} />
+                <Tooltip
+                  content={props =>
+                    renderCustomTooltip({ ...props, type: 'types' })
+                  }
+                />
               </PieChart>
             </ResponsiveContainer>
           </ChartContainer>
@@ -815,26 +887,37 @@ export default function Statistiques() {
           <ChartContainer>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'repartition' })} />
+                <Tooltip
+                  content={props =>
+                    renderCustomTooltip({ ...props, type: 'repartition' })
+                  }
+                />
                 <Pie
                   data={repartitionData}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  innerRadius={window.innerWidth <= 768 ? "35%" : "45%"}
-                  outerRadius={window.innerWidth <= 768 ? "75%" : "85%"}
+                  innerRadius={window.innerWidth <= 768 ? '35%' : '45%'}
+                  outerRadius={window.innerWidth <= 768 ? '75%' : '85%'}
                   paddingAngle={2}
-                  label={window.innerWidth <= 768 ? false : {
-                    position: 'outside',
-                    fill: '#fff',
-                    fontSize: 12
-                  }}
+                  label={
+                    window.innerWidth <= 768
+                      ? false
+                      : {
+                          position: 'outside',
+                          fill: '#fff',
+                          fontSize: 12,
+                        }
+                  }
                 >
                   {repartitionData.map((entry, index) => (
-                    <Cell 
+                    <Cell
                       key={`cell-${index}`}
-                      fill={ELEMENT_COLORS.repartitions[entry.name] || CHART_COLORS.accent2}
+                      fill={
+                        ELEMENT_COLORS.repartitions[entry.name] ||
+                        CHART_COLORS.accent2
+                      }
                     />
                   ))}
                 </Pie>
@@ -850,93 +933,153 @@ export default function Statistiques() {
             </KPIIcon>
             <KPIContent>
               <KPILabel>Dimensions</KPILabel>
-              <div style={{ 
-                display: 'flex', 
-                justifyContent: 'space-between',
-                gap: window.innerWidth <= 768 ? '0.5rem' : '1rem',
-                marginTop: window.innerWidth <= 768 ? '0.3rem' : '0.5rem',
-                flexWrap: 'wrap'
-              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  gap: window.innerWidth <= 768 ? '0.5rem' : '1rem',
+                  marginTop: window.innerWidth <= 768 ? '0.3rem' : '0.5rem',
+                  flexWrap: 'wrap',
+                }}
+              >
                 <div>
-                  <div style={{ fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.8rem', opacity: 0.8 }}>Longueur</div>
-                  <KPIValue style={{ fontSize: window.innerWidth <= 768 ? '1rem' : '1.2rem' }}>{longueursData[0]?.name || '-'}</KPIValue>
+                  <div
+                    style={{
+                      fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.8rem',
+                      opacity: 0.8,
+                    }}
+                  >
+                    Longueur
+                  </div>
+                  <KPIValue
+                    style={{
+                      fontSize: window.innerWidth <= 768 ? '1rem' : '1.2rem',
+                    }}
+                  >
+                    {longueursData[0]?.name || '-'}
+                  </KPIValue>
                 </div>
                 <div>
-                  <div style={{ fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.8rem', opacity: 0.8 }}>Largeur</div>
-                  <KPIValue style={{ fontSize: window.innerWidth <= 768 ? '1rem' : '1.2rem' }}>{largeursData[0]?.name || '-'}</KPIValue>
+                  <div
+                    style={{
+                      fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.8rem',
+                      opacity: 0.8,
+                    }}
+                  >
+                    Largeur
+                  </div>
+                  <KPIValue
+                    style={{
+                      fontSize: window.innerWidth <= 768 ? '1rem' : '1.2rem',
+                    }}
+                  >
+                    {largeursData[0]?.name || '-'}
+                  </KPIValue>
                 </div>
               </div>
             </KPIContent>
           </KPIHeader>
-          <ChartContainer style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between',
-            gap: window.innerWidth <= 768 ? '0.5rem' : '1rem'
-          }}>
-            <ResponsiveContainer width="48%" height={window.innerWidth <= 768 ? 120 : 150}>
+          <ChartContainer
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              gap: window.innerWidth <= 768 ? '0.5rem' : '1rem',
+            }}
+          >
+            <ResponsiveContainer
+              width="48%"
+              height={window.innerWidth <= 768 ? 120 : 150}
+            >
               <PieChart>
-                <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'longueur' })} />
+                <Tooltip
+                  content={props =>
+                    renderCustomTooltip({ ...props, type: 'longueur' })
+                  }
+                />
                 <Pie
                   data={longueursData}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  innerRadius={window.innerWidth <= 768 ? "35%" : "45%"}
-                  outerRadius={window.innerWidth <= 768 ? "75%" : "85%"}
+                  innerRadius={window.innerWidth <= 768 ? '35%' : '45%'}
+                  outerRadius={window.innerWidth <= 768 ? '75%' : '85%'}
                   paddingAngle={2}
-                  label={window.innerWidth <= 768 ? false : {
-                    position: 'outside',
-                    fill: '#fff',
-                    fontSize: 11
-                  }}
+                  label={
+                    window.innerWidth <= 768
+                      ? false
+                      : {
+                          position: 'outside',
+                          fill: '#fff',
+                          fontSize: 11,
+                        }
+                  }
                 >
                   {longueursData.map((entry, index) => (
-                    <Cell 
+                    <Cell
                       key={`cell-${index}`}
-                      fill={ELEMENT_COLORS.longueurs[entry.name] || CHART_COLORS.accent3}
+                      fill={
+                        ELEMENT_COLORS.longueurs[entry.name] ||
+                        CHART_COLORS.accent3
+                      }
                     />
                   ))}
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
-            <ResponsiveContainer width="48%" height={window.innerWidth <= 768 ? 120 : 150}>
+            <ResponsiveContainer
+              width="48%"
+              height={window.innerWidth <= 768 ? 120 : 150}
+            >
               <PieChart>
-                <Tooltip content={(props) => renderCustomTooltip({ ...props, type: 'largeur' })} />
+                <Tooltip
+                  content={props =>
+                    renderCustomTooltip({ ...props, type: 'largeur' })
+                  }
+                />
                 <Pie
                   data={largeursData}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  innerRadius={window.innerWidth <= 768 ? "35%" : "45%"}
-                  outerRadius={window.innerWidth <= 768 ? "75%" : "85%"}
+                  innerRadius={window.innerWidth <= 768 ? '35%' : '45%'}
+                  outerRadius={window.innerWidth <= 768 ? '75%' : '85%'}
                   paddingAngle={2}
-                  label={window.innerWidth <= 768 ? false : {
-                    position: 'outside',
-                    fill: '#fff',
-                    fontSize: 11
-                  }}
+                  label={
+                    window.innerWidth <= 768
+                      ? false
+                      : {
+                          position: 'outside',
+                          fill: '#fff',
+                          fontSize: 11,
+                        }
+                  }
                 >
                   {largeursData.map((entry, index) => (
-                    <Cell 
+                    <Cell
                       key={`cell-${index}`}
-                      fill={ELEMENT_COLORS.largeurs[entry.name] || CHART_COLORS.accent4}
+                      fill={
+                        ELEMENT_COLORS.largeurs[entry.name] ||
+                        CHART_COLORS.accent4
+                      }
                     />
                   ))}
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
           </ChartContainer>
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.8rem',
-            color: '#fff',
-            opacity: 0.8,
-            padding: '0 1rem',
-            marginTop: window.innerWidth <= 768 ? '0.3rem' : '0.5rem'
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.8rem',
+              color: '#fff',
+              opacity: 0.8,
+              padding: '0 1rem',
+              marginTop: window.innerWidth <= 768 ? '0.3rem' : '0.5rem',
+            }}
+          >
             <div>Longueur</div>
             <div>Largeur</div>
           </div>

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { log } from '../utils/logger';
 import styled from 'styled-components';
 import { supabaseHelper } from '../lib/supabase';
 
@@ -95,12 +96,19 @@ const Button = styled.button`
 `;
 
 const Message = styled.p`
-  color: ${props => props.$success ? '#00ff88' : '#ff5555'};
+  color: ${props => (props.$success ? '#00ff88' : '#ff5555')};
   text-align: center;
   margin-top: 1rem;
 `;
 
-const TYPES_VARIETES = ['Beuh', 'Mousseux', 'Dry', 'Frozen', 'Static', 'Autres'];
+const TYPES_VARIETES = [
+  'Beuh',
+  'Mousseux',
+  'Dry',
+  'Frozen',
+  'Static',
+  'Autres',
+];
 
 export default function VarietePopup({ isOpen, onClose, onAdd }) {
   const [nomVariete, setNomVariete] = useState('');
@@ -108,10 +116,13 @@ export default function VarietePopup({ isOpen, onClose, onAdd }) {
   const [origineVariete, setOrigineVariete] = useState('');
   const [message, setMessage] = useState({ text: '', success: true });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     if (!nomVariete.trim() || !typeVariete) {
-      setMessage({ text: 'Le nom et le type de variété sont requis', success: false });
+      setMessage({
+        text: 'Le nom et le type de variété sont requis',
+        success: false,
+      });
       return;
     }
 
@@ -119,7 +130,7 @@ export default function VarietePopup({ isOpen, onClose, onAdd }) {
       const newVariete = await supabaseHelper.addVariete({
         nom: nomVariete.trim(),
         type: typeVariete,
-        origine: origineVariete.trim() || null
+        origine: origineVariete.trim() || null,
       });
 
       if (newVariete) {
@@ -134,13 +145,19 @@ export default function VarietePopup({ isOpen, onClose, onAdd }) {
           setMessage({ text: '', success: true });
         }, 1500);
       } else {
-        throw new Error('Erreur lors de l\'ajout de la variété : réponse invalide du serveur');
+        throw new Error(
+          "Erreur lors de l'ajout de la variété : réponse invalide du serveur"
+        );
       }
     } catch (error) {
-      console.error('Erreur lors de l\'ajout de la variété:', error);
-      setMessage({ 
-        text: error.message || 'Erreur lors de l\'ajout de la variété. Veuillez réessayer.', 
-        success: false 
+      log.error("Erreur lors de l'ajout de la variété:", {
+        error: error.message,
+      });
+      setMessage({
+        text:
+          error.message ||
+          "Erreur lors de l'ajout de la variété. Veuillez réessayer.",
+        success: false,
       });
     }
   };
@@ -151,7 +168,9 @@ export default function VarietePopup({ isOpen, onClose, onAdd }) {
     <PopupOverlay onClick={onClose}>
       <PopupContent onClick={e => e.stopPropagation()}>
         <CloseButton onClick={onClose}>&times;</CloseButton>
-        <h2 style={{ color: '#00ff88', marginBottom: '1rem' }}>Ajouter une variété</h2>
+        <h2 style={{ color: '#00ff88', marginBottom: '1rem' }}>
+          Ajouter une variété
+        </h2>
         <Form onSubmit={handleSubmit}>
           <FormGroup>
             <Label>Nom de la variété *</Label>
@@ -172,7 +191,9 @@ export default function VarietePopup({ isOpen, onClose, onAdd }) {
             >
               <option value="">Sélectionnez un type</option>
               {TYPES_VARIETES.map(type => (
-                <option key={type} value={type}>{type}</option>
+                <option key={type} value={type}>
+                  {type}
+                </option>
               ))}
             </Select>
           </FormGroup>
@@ -195,4 +216,4 @@ export default function VarietePopup({ isOpen, onClose, onAdd }) {
       </PopupContent>
     </PopupOverlay>
   );
-} 
+}

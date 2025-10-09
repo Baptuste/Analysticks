@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import './App.css';
 import LoadingBattery from './components/LoadingBattery';
@@ -15,11 +15,13 @@ const LoadingContainer = styled.div`
 function App() {
   return (
     <div className="App">
-      <Suspense fallback={
-        <LoadingContainer>
-          <LoadingBattery />
-        </LoadingContainer>
-      }>
+      <Suspense
+        fallback={
+          <LoadingContainer>
+            <LoadingBattery />
+          </LoadingContainer>
+        }
+      >
         <Outlet />
       </Suspense>
     </div>

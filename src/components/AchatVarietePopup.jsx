@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { log } from '../utils/logger';
 import styled from 'styled-components';
 import { X } from 'lucide-react';
 import { supabaseHelper } from '../lib/supabase';
@@ -17,8 +18,12 @@ const ModalOverlay = styled.div`
   animation: fadeIn 0.3s ease;
 
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 `;
 
@@ -158,7 +163,12 @@ const SuccessMessage = styled.p`
   text-align: center;
 `;
 
-export default function AchatVarietePopup({ isOpen, onClose, varietes, onAchatComplete }) {
+export default function AchatVarietePopup({
+  isOpen,
+  onClose,
+  varietes,
+  onAchatComplete,
+}) {
   const [selectedVariete, setSelectedVariete] = useState('');
   const [quantite, setQuantite] = useState('');
   const [prix, setPrix] = useState('');
@@ -166,7 +176,7 @@ export default function AchatVarietePopup({ isOpen, onClose, varietes, onAchatCo
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -182,7 +192,7 @@ export default function AchatVarietePopup({ isOpen, onClose, varietes, onAchatCo
       const achat = {
         variete_id: selectedVariete,
         quantite: parseFloat(quantite),
-        prix: parseFloat(prix)
+        prix: parseFloat(prix),
       };
 
       const { error: supabaseError } = await supabaseHelper.addAchat(achat);
@@ -200,7 +210,7 @@ export default function AchatVarietePopup({ isOpen, onClose, varietes, onAchatCo
       setSelectedVariete('');
       setQuantite('');
       setPrix('');
-      
+
       if (onAchatComplete) {
         onAchatComplete();
       }
@@ -208,10 +218,11 @@ export default function AchatVarietePopup({ isOpen, onClose, varietes, onAchatCo
       setTimeout(() => {
         onClose();
       }, 2000);
-
     } catch (err) {
-      setError('Une erreur est survenue lors de l\'enregistrement de l\'achat');
-      console.error('Erreur:', err);
+      setError("Une erreur est survenue lors de l'enregistrement de l'achat");
+      log.error("Erreur lors de l'ajout de la variété:", {
+        error: err.message,
+      });
     } finally {
       setLoading(false);
     }
@@ -225,7 +236,7 @@ export default function AchatVarietePopup({ isOpen, onClose, varietes, onAchatCo
         <CloseButton onClick={onClose}>
           <X size={24} />
         </CloseButton>
-        
+
         <Title>Nouvel Achat</Title>
 
         <Form onSubmit={handleSubmit}>
@@ -233,10 +244,10 @@ export default function AchatVarietePopup({ isOpen, onClose, varietes, onAchatCo
             <Label>Variété</Label>
             <Select
               value={selectedVariete}
-              onChange={(e) => setSelectedVariete(e.target.value)}
+              onChange={e => setSelectedVariete(e.target.value)}
             >
               <option value="">Sélectionnez une variété</option>
-              {varietes.map((v) => (
+              {varietes.map(v => (
                 <option key={v.id} value={v.id}>
                   {v.nom} ({v.type}){v.origine ? ` - ${v.origine}` : ''}
                 </option>
@@ -251,7 +262,7 @@ export default function AchatVarietePopup({ isOpen, onClose, varietes, onAchatCo
               min="0"
               step="0.1"
               value={quantite}
-              onChange={(e) => setQuantite(e.target.value)}
+              onChange={e => setQuantite(e.target.value)}
               placeholder="Entrez la quantité en grammes"
             />
           </FormGroup>
@@ -263,7 +274,7 @@ export default function AchatVarietePopup({ isOpen, onClose, varietes, onAchatCo
               min="0"
               step="0.01"
               value={prix}
-              onChange={(e) => setPrix(e.target.value)}
+              onChange={e => setPrix(e.target.value)}
               placeholder="Entrez le prix en euros"
             />
           </FormGroup>
@@ -272,10 +283,10 @@ export default function AchatVarietePopup({ isOpen, onClose, varietes, onAchatCo
           {success && <SuccessMessage>{success}</SuccessMessage>}
 
           <Button type="submit" disabled={loading}>
-            {loading ? 'Enregistrement...' : 'Enregistrer l\'achat'}
+            {loading ? 'Enregistrement...' : "Enregistrer l'achat"}
           </Button>
         </Form>
       </ModalContent>
     </ModalOverlay>
   );
-} 
+}

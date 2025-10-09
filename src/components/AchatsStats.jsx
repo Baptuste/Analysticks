@@ -1,8 +1,17 @@
-import React, { useEffect, useState, useCallback } from 'react';
+// Remplacement: console.error → log.error
+// Remplacement: console.log → log.debug
+import { useEffect, useState, useCallback } from 'react';
+import { log } from '../utils/logger';
 import styled from 'styled-components';
 import {
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer, LineChart, Line
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  LineChart,
+  Line,
 } from 'recharts';
 import { supabaseHelper } from '../lib/supabase';
 import LoadingBattery from './LoadingBattery';
@@ -128,7 +137,7 @@ const VarieteCard = styled.div`
   border: 1px solid ${props => props.$color};
   border-radius: 10px;
   padding: 1.5rem;
-  
+
   &:hover {
     background: rgba(0, 0, 0, 0.4);
     transform: translateY(-2px);
@@ -200,53 +209,55 @@ const LoadingWrapper = styled.div`
 const COLORS = {
   'Beuh du sage': {
     quantite: '#00ff88', // Vert vif
-    prix: '#66ff99'
+    prix: '#66ff99',
   },
-  'Mousseux': {
+  Mousseux: {
     quantite: '#ff3366', // Rose vif
-    prix: '#ff6699'
+    prix: '#ff6699',
   },
-  'Amnesia': {
+  Amnesia: {
     quantite: '#ffcc00', // Jaune doré
-    prix: '#ffdd44'
+    prix: '#ffdd44',
   },
-  'Lemon': {
+  Lemon: {
     quantite: '#00ccff', // Bleu ciel
-    prix: '#66ddff'
+    prix: '#66ddff',
   },
-  'Purple': {
+  Purple: {
     quantite: '#cc33ff', // Violet
-    prix: '#dd66ff'
+    prix: '#dd66ff',
   },
-  'Orange': {
+  Orange: {
     quantite: '#ff6600', // Orange
-    prix: '#ff8833'
-  }
+    prix: '#ff8833',
+  },
 };
 
-const getVarieteColors = (variete) => {
-  return COLORS[variete] || {
-    quantite: '#ffffff',
-    prix: '#cccccc'
-  };
+const getVarieteColors = variete => {
+  return (
+    COLORS[variete] || {
+      quantite: '#ffffff',
+      prix: '#cccccc',
+    }
+  );
 };
 
-const CustomDot = ({ cx, cy, stroke, payload, value }) => {
+const CustomDot = ({ cx, cy, stroke, value }) => {
   if (!value) return null;
   return (
-    <circle 
-      cx={cx} 
-      cy={cy} 
-      r={4} 
-      stroke={stroke} 
-      strokeWidth={2} 
+    <circle
+      cx={cx}
+      cy={cy}
+      r={4}
+      stroke={stroke}
+      strokeWidth={2}
       fill="#222"
       style={{ cursor: 'pointer' }}
     />
   );
 };
 
-const safeNumber = (value) => {
+const safeNumber = value => {
   try {
     const num = parseFloat(value);
     return isNaN(num) ? 0 : num;
@@ -275,13 +286,18 @@ const renderCustomTooltip = ({ active, payload, label }) => {
       <CustomTooltip>
         <div className="tooltip-title">{label || ''}</div>
         <div className="tooltip-content">
-          <div>Quantité : <span className="tooltip-value">{safeToFixed(quantite)}g</span></div>
-          <div>Prix : <span className="tooltip-value">{safeToFixed(prix)}€</span></div>
+          <div>
+            Quantité :{' '}
+            <span className="tooltip-value">{safeToFixed(quantite)}g</span>
+          </div>
+          <div>
+            Prix : <span className="tooltip-value">{safeToFixed(prix)}€</span>
+          </div>
         </div>
       </CustomTooltip>
     );
   } catch (error) {
-    console.error('Erreur dans le tooltip:', error);
+    log.error('Erreur dans le tooltip:', error);
     return null;
   }
 };
@@ -298,13 +314,13 @@ export default function AchatsStats() {
     prixMoyenParGramme: 0,
     dernierAchat: null,
     dernierAchatQuantite: 0,
-    dernierAchatPrix: 0
+    dernierAchatPrix: 0,
   });
 
   const processAchatsData = useCallback(async () => {
     try {
       if (!Array.isArray(achats) || achats.length === 0) {
-        console.log('Pas d\'achats à traiter');
+        log.debug("Pas d'achats à traiter");
         setProcessedData([]);
         setVarieteStats({});
         return;
@@ -313,24 +329,24 @@ export default function AchatsStats() {
       // Nettoyage et validation des données
       const validAchats = achats.filter(achat => {
         if (!achat) return false;
-        
+
         try {
           const date = new Date(achat.created_at);
           return (
-            !isNaN(date.getTime()) && 
-            achat.quantite !== undefined && 
+            !isNaN(date.getTime()) &&
+            achat.quantite !== undefined &&
             achat.prix !== undefined &&
-            achat.varietes && 
+            achat.varietes &&
             typeof achat.varietes.nom === 'string'
           );
         } catch (e) {
-          console.error('Achat invalide:', e);
+          log.error('Achat invalide:', e);
           return false;
         }
       });
 
       if (validAchats.length === 0) {
-        console.log('Aucun achat valide trouvé');
+        log.debug('Aucun achat valide trouvé');
         setProcessedData([]);
         setVarieteStats({});
         return;
@@ -342,7 +358,7 @@ export default function AchatsStats() {
         quantite: safeNumber(achat.quantite),
         prix: safeNumber(achat.prix),
         variete: achat.varietes.nom,
-        varieteId: achat.varietes.id
+        varieteId: achat.varietes.id,
       }));
 
       // Groupement par date
@@ -350,28 +366,30 @@ export default function AchatsStats() {
       achatsAvecDates.forEach(achat => {
         const dateStr = achat.date.toLocaleDateString('fr-FR', {
           day: '2-digit',
-          month: 'short'
+          month: 'short',
         });
-        
+
         if (!achatsParDate[dateStr]) {
           achatsParDate[dateStr] = {
             date: dateStr,
             quantite: 0,
-            prix: 0
+            prix: 0,
           };
         }
-        
-        achatsParDate[dateStr].quantite = safeNumber(achatsParDate[dateStr].quantite) + achat.quantite;
-        achatsParDate[dateStr].prix = safeNumber(achatsParDate[dateStr].prix) + achat.prix;
+
+        achatsParDate[dateStr].quantite =
+          safeNumber(achatsParDate[dateStr].quantite) + achat.quantite;
+        achatsParDate[dateStr].prix =
+          safeNumber(achatsParDate[dateStr].prix) + achat.prix;
       });
 
       // Préparation des données pour le graphique
       const graphData = Object.entries(achatsParDate)
-        .filter(([_, data]) => data && typeof data === 'object')
+        .filter(([, data]) => data && typeof data === 'object')
         .map(([date, data]) => ({
           date,
           quantite: safeToFixed(data.quantite),
-          prix: safeToFixed(data.prix)
+          prix: safeToFixed(data.prix),
         }));
 
       // Tri des données
@@ -387,7 +405,7 @@ export default function AchatsStats() {
         'sept.',
         'oct.',
         'nov.',
-        'déc.'
+        'déc.',
       ];
 
       graphData.sort((a, b) => {
@@ -395,7 +413,7 @@ export default function AchatsStats() {
           const [dayA, monthA] = (a.date || '').split(' ');
           const [dayB, monthB] = (b.date || '').split(' ');
           if (!dayA || !monthA || !dayB || !monthB) return 0;
-          
+
           const monthIndexA = MOIS_FR.indexOf(monthA);
           const monthIndexB = MOIS_FR.indexOf(monthB);
           if (monthIndexA === -1 || monthIndexB === -1) return 0;
@@ -404,7 +422,7 @@ export default function AchatsStats() {
           const dateB = new Date(2024, monthIndexB, parseInt(dayB, 10));
           return dateA - dateB;
         } catch (error) {
-          console.error('Erreur de tri:', error);
+          log.error('Erreur de tri:', error);
           return 0;
         }
       });
@@ -423,15 +441,17 @@ export default function AchatsStats() {
             nombreAchats: 0,
             sticksTotal: 0,
             dernierAchat: null,
-            varieteId: achat.varietes.id
+            varieteId: achat.varietes.id,
           };
         }
 
         const stats = statsParVariete[varieteNom];
-        stats.quantiteTotale = safeNumber(stats.quantiteTotale) + safeNumber(achat.quantite);
-        stats.montantTotal = safeNumber(stats.montantTotal) + safeNumber(achat.prix);
+        stats.quantiteTotale =
+          safeNumber(stats.quantiteTotale) + safeNumber(achat.quantite);
+        stats.montantTotal =
+          safeNumber(stats.montantTotal) + safeNumber(achat.prix);
         stats.nombreAchats += 1;
-        
+
         const achatDate = new Date(achat.created_at);
         if (!stats.dernierAchat || achatDate > stats.dernierAchat) {
           stats.dernierAchat = achatDate;
@@ -441,10 +461,15 @@ export default function AchatsStats() {
       // Récupérer les sticks pour chaque variété
       for (const variete of Object.values(statsParVariete)) {
         try {
-          const sticksCount = await supabaseHelper.getSticksByVariete(variete.varieteId);
+          const sticksCount = await supabaseHelper.getSticksByVariete(
+            variete.varieteId
+          );
           variete.sticksTotal = sticksCount;
         } catch (error) {
-          console.error(`Erreur lors de la récupération des sticks pour ${variete.nom}:`, error);
+          log.error(
+            `Erreur lors de la récupération des sticks pour ${variete.nom}:`,
+            error
+          );
           variete.sticksTotal = 0;
         }
       }
@@ -458,14 +483,27 @@ export default function AchatsStats() {
       setVarieteStats(statsParVariete);
 
       // Calculer les totaux
-      const totalQuantite = validAchats.reduce((sum, achat) => sum + safeNumber(achat.quantite), 0);
-      const totalMontant = validAchats.reduce((sum, achat) => sum + safeNumber(achat.prix), 0);
-      const prixMoyenParGramme = totalQuantite > 0 ? totalMontant / totalQuantite : 0;
-      
+      const totalQuantite = validAchats.reduce(
+        (sum, achat) => sum + safeNumber(achat.quantite),
+        0
+      );
+      const totalMontant = validAchats.reduce(
+        (sum, achat) => sum + safeNumber(achat.prix),
+        0
+      );
+      const prixMoyenParGramme =
+        totalQuantite > 0 ? totalMontant / totalQuantite : 0;
+
       const dernierAchatData = validAchats[validAchats.length - 1];
-      const dernierAchat = dernierAchatData ? new Date(dernierAchatData.created_at) : null;
-      const dernierAchatQuantite = dernierAchatData ? safeNumber(dernierAchatData.quantite) : 0;
-      const dernierAchatPrix = dernierAchatData ? safeNumber(dernierAchatData.prix) : 0;
+      const dernierAchat = dernierAchatData
+        ? new Date(dernierAchatData.created_at)
+        : null;
+      const dernierAchatQuantite = dernierAchatData
+        ? safeNumber(dernierAchatData.quantite)
+        : 0;
+      const dernierAchatPrix = dernierAchatData
+        ? safeNumber(dernierAchatData.prix)
+        : 0;
 
       setStats({
         totalQuantite: safeToFixed(totalQuantite),
@@ -473,11 +511,10 @@ export default function AchatsStats() {
         prixMoyenParGramme: safeToFixed(prixMoyenParGramme),
         dernierAchat,
         dernierAchatQuantite: safeToFixed(dernierAchatQuantite),
-        dernierAchatPrix: safeToFixed(dernierAchatPrix)
+        dernierAchatPrix: safeToFixed(dernierAchatPrix),
       });
-
     } catch (error) {
-      console.error('Erreur lors du traitement des données:', error);
+      log.error('Erreur lors du traitement des données:', error);
       setProcessedData([]);
       setVarieteStats({});
     }
@@ -497,18 +534,19 @@ export default function AchatsStats() {
       setAchats(data);
       setError('');
     } catch (err) {
-      console.error('Erreur lors de la récupération des achats:', err);
-      setError('Impossible de charger les données d\'achats');
+      log.error('Erreur lors de la récupération des achats:', err);
+      setError("Impossible de charger les données d'achats");
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return (
-    <LoadingWrapper>
-      <LoadingBattery />
-    </LoadingWrapper>
-  );
+  if (loading)
+    return (
+      <LoadingWrapper>
+        <LoadingBattery />
+      </LoadingWrapper>
+    );
   if (error) return <StatsContainer>Erreur : {error}</StatsContainer>;
 
   return (
@@ -535,7 +573,11 @@ export default function AchatsStats() {
             {stats.dernierAchatQuantite}g - {stats.dernierAchatPrix}€
           </StatValue>
           <StatLabel>
-            Dernier Achat ({stats.dernierAchat ? stats.dernierAchat.toLocaleDateString('fr-FR') : '-'})
+            Dernier Achat (
+            {stats.dernierAchat
+              ? stats.dernierAchat.toLocaleDateString('fr-FR')
+              : '-'}
+            )
           </StatLabel>
         </StatCard>
       </StatGrid>
@@ -548,7 +590,10 @@ export default function AchatsStats() {
               data={processedData}
               margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="rgba(255,255,255,0.1)"
+              />
               <XAxis
                 dataKey="date"
                 tick={{ fill: '#fff' }}
@@ -563,7 +608,7 @@ export default function AchatsStats() {
                   value: 'Quantité (g)',
                   angle: -90,
                   position: 'insideLeft',
-                  fill: '#fff'
+                  fill: '#fff',
                 }}
               />
               <YAxis
@@ -574,7 +619,7 @@ export default function AchatsStats() {
                   value: 'Prix (€)',
                   angle: 90,
                   position: 'insideRight',
-                  fill: '#fff'
+                  fill: '#fff',
                 }}
               />
               <Tooltip content={renderCustomTooltip} />
@@ -609,7 +654,7 @@ export default function AchatsStats() {
         <ChartTitle>Détails par Variété</ChartTitle>
         <VarieteStatsGrid>
           {Object.entries(varieteStats).map(([variete, stats]) => (
-            <VarieteCard 
+            <VarieteCard
               key={variete}
               $color={getVarieteColors(variete).quantite}
             >
@@ -619,15 +664,15 @@ export default function AchatsStats() {
                   {variete}
                 </VarieteName>
               </VarieteHeader>
-              
+
               <VarieteStatsList>
                 <VarieteStatItem>
-                  <VarieteItemLabel>Nombre d'achats</VarieteItemLabel>
+                  <VarieteItemLabel>Nombre d&apos;achats</VarieteItemLabel>
                   <VarieteItemValue $color={getVarieteColors(variete).quantite}>
                     {stats.nombreAchats}
                   </VarieteItemValue>
                 </VarieteStatItem>
-                
+
                 <VarieteStatItem>
                   <VarieteItemLabel>Quantité totale</VarieteItemLabel>
                   <VarieteItemValue $color={getVarieteColors(variete).quantite}>
@@ -662,4 +707,4 @@ export default function AchatsStats() {
       </ChartSection>
     </StatsContainer>
   );
-} 
+}

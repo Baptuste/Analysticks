@@ -1,22 +1,28 @@
+// // Remplacement: console.warn → log.warn
+// // Remplacement: console.error → log.error
 import { createClient } from '@supabase/supabase-js';
+import { log } from '../utils/logger';
 
+// ✅ CONFIGURATION SUPABASE
 const supabaseUrl = 'https://ckseyrmpywyczywfdmhu.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2V5cm1weXd5Y3p5d2ZkbWh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyNTg4NTEsImV4cCI6MjA2MzgzNDg1MX0.HXunSRev4E_oy7bSXyPF70q233eAuslmXBJuN_CxPO4';
+const supabaseKey =
+  process.env.REACT_APP_SUPABASE_KEY ||
+  process.env.SUPABASE_KEY ||
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2V5cm1weXd5Y3p5d2ZkbWh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyNTg4NTEsImV4cCI6MjA2MzgzNDg1MX0.HXunSRev4E_oy7bSXyPF70q233eAuslmXBJuN_CxPO4';
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Supabase URL et Anon Key sont requis');
-}
+// Configuration Supabase - Clé hardcodée pour le développement
+// En production, utilisez les variables d'environnement REACT_APP_SUPABASE_KEY
 
 // Créer une instance unique du client Supabase
 let supabaseInstance = null;
 
 const getSupabase = () => {
   if (!supabaseInstance) {
-    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
+    supabaseInstance = createClient(supabaseUrl, supabaseKey, {
       auth: {
         persistSession: true,
-        storageKey: 'analysticks-storage-key'
-      }
+        storageKey: 'analysticks-storage-key',
+      },
     });
   }
   return supabaseInstance;
@@ -25,29 +31,29 @@ const getSupabase = () => {
 export const supabase = getSupabase();
 
 // Validation des données
-const validateEntry = (data) => {
+const validateEntry = data => {
   const errors = [];
-  
+
   if (!data.repartition) {
     errors.push('La répartition est requise');
   }
-  
+
   if (!data.longueur) {
     errors.push('La longueur est requise');
   }
-  
+
   if (!data.largeur) {
     errors.push('La largeur est requise');
   }
-  
+
   if (!data.varieteId) {
     errors.push('La variété est requise');
   }
-  
+
   if (data.rating !== null && (data.rating < 1 || data.rating > 5)) {
     errors.push('La note doit être comprise entre 1 et 5');
   }
-  
+
   return errors;
 };
 
@@ -58,7 +64,8 @@ export const supabaseHelper = {
     try {
       const { data, error } = await supabase
         .from('sticks')
-        .select(`
+        .select(
+          `
           *,
           variete:variete_id (
             id,
@@ -66,16 +73,17 @@ export const supabaseHelper = {
             type,
             origine
           )
-        `)
+        `
+        )
         .order('timestamp', { ascending: false });
-      
+
       if (error) {
-        console.error('Erreur getAllEntries:', error);
+        log.error('Erreur getAllEntries:', error);
         throw error;
       }
       return data || [];
     } catch (err) {
-      console.error('Erreur getAllEntries:', err);
+      log.error('Erreur getAllEntries:', err);
       throw err;
     }
   },
@@ -89,7 +97,7 @@ export const supabaseHelper = {
         longueur,
         largeur,
         varieteId,
-        rating
+        rating,
       });
 
       if (validationErrors.length > 0) {
@@ -103,12 +111,10 @@ export const supabaseHelper = {
         largeur: largeur.trim(),
         variete_id: varieteId,
         rating: rating || null,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
-      const { data, error } = await supabase
-        .from('sticks')
-        .insert([cleanData])
+      const { data, error } = await supabase.from('sticks').insert([cleanData])
         .select(`
           *,
           variete:variete_id (
@@ -120,18 +126,20 @@ export const supabaseHelper = {
         `);
 
       if (error) {
-        console.error('Erreur addEntry:', error);
+        log.error('Erreur addEntry:', error);
         throw new Error(error.message);
       }
 
       if (!data?.[0]) {
-        throw new Error('Aucune donnée n\'a été retournée après l\'insertion');
+        throw new Error("Aucune donnée n'a été retournée après l'insertion");
       }
 
       return data[0];
     } catch (err) {
-      console.error('Erreur addEntry:', err);
-      throw new Error(err.message || 'Une erreur est survenue lors de l\'ajout de l\'entrée');
+      log.error('Erreur addEntry:', err);
+      throw new Error(
+        err.message || "Une erreur est survenue lors de l'ajout de l'entrée"
+      );
     }
   },
 
@@ -144,14 +152,17 @@ export const supabaseHelper = {
         .order('nom');
 
       if (error) {
-        console.error('Erreur getAllVarietes:', error);
+        log.error('Erreur getAllVarietes:', error);
         throw new Error(error.message);
       }
 
       return data || [];
     } catch (err) {
-      console.error('Erreur getAllVarietes:', err);
-      throw new Error(err.message || 'Une erreur est survenue lors de la récupération des variétés');
+      log.error('Erreur getAllVarietes:', err);
+      throw new Error(
+        err.message ||
+          'Une erreur est survenue lors de la récupération des variétés'
+      );
     }
   },
 
@@ -164,20 +175,22 @@ export const supabaseHelper = {
 
       const { data, error } = await supabase
         .from('varietes')
-        .insert([{ 
-          nom: nom.trim(),
-          type,
-          origine: origine?.trim() || null
-        }])
+        .insert([
+          {
+            nom: nom.trim(),
+            type,
+            origine: origine?.trim() || null,
+          },
+        ])
         .select();
 
       if (error) {
-        console.error('Erreur addVariete:', error);
+        log.error('Erreur addVariete:', error);
         throw error;
       }
       return data?.[0];
     } catch (err) {
-      console.error('Erreur addVariete:', err);
+      log.error('Erreur addVariete:', err);
       throw err;
     }
   },
@@ -187,7 +200,8 @@ export const supabaseHelper = {
     try {
       const { data, error } = await supabase
         .from('sticks')
-        .select(`
+        .select(
+          `
           *,
           variete:variete_id (
             id,
@@ -195,11 +209,12 @@ export const supabaseHelper = {
             type,
             origine
           )
-        `)
+        `
+        )
         .order('timestamp', { ascending: true });
 
       if (error) {
-        console.error('Erreur getWeeklyStats:', error);
+        log.error('Erreur getWeeklyStats:', error);
         throw error;
       }
 
@@ -214,7 +229,7 @@ export const supabaseHelper = {
             count: 0,
             types: {},
             repartitions: {},
-            varietes: {}
+            varietes: {},
           };
         }
 
@@ -226,18 +241,20 @@ export const supabaseHelper = {
         acc[weekKey].types[type] = (acc[weekKey].types[type] || 0) + 1;
 
         // Compter par répartition
-        acc[weekKey].repartitions[entry.repartition] = (acc[weekKey].repartitions[entry.repartition] || 0) + 1;
+        acc[weekKey].repartitions[entry.repartition] =
+          (acc[weekKey].repartitions[entry.repartition] || 0) + 1;
 
         // Compter par variété
         const varieteKey = `${entry.variete.nom} (${entry.variete.type})`;
-        acc[weekKey].varietes[varieteKey] = (acc[weekKey].varietes[varieteKey] || 0) + 1;
+        acc[weekKey].varietes[varieteKey] =
+          (acc[weekKey].varietes[varieteKey] || 0) + 1;
 
         return acc;
       }, {});
 
       return weeklyData;
     } catch (err) {
-      console.error('Erreur getWeeklyStats:', err);
+      log.error('Erreur getWeeklyStats:', err);
       throw err;
     }
   },
@@ -253,13 +270,13 @@ export const supabaseHelper = {
         .maybeSingle();
 
       if (error) {
-        console.error('Erreur getLastEntry:', error);
+        log.error('Erreur getLastEntry:', error);
         return null;
       }
 
       return data;
     } catch (err) {
-      console.error('Erreur getLastEntry:', err);
+      log.error('Erreur getLastEntry:', err);
       return null;
     }
   },
@@ -276,7 +293,9 @@ export const supabaseHelper = {
         variete_id: achat.variete_id,
         quantite: Number(achat.quantite),
         prix: Number(achat.prix),
-        created_at: achat.forceDate ? achat.created_at : new Date().toISOString()
+        created_at: achat.forceDate
+          ? achat.created_at
+          : new Date().toISOString(),
       };
 
       // Vérifier que les valeurs sont valides
@@ -301,7 +320,7 @@ export const supabaseHelper = {
 
       return { data: data?.[0], error: null };
     } catch (error) {
-      console.error('Erreur lors de l\'ajout de l\'achat:', error);
+      log.error("Erreur lors de l'ajout de l'achat:", error);
       return { data: null, error };
     }
   },
@@ -310,7 +329,8 @@ export const supabaseHelper = {
     try {
       const { data, error } = await supabase
         .from('achats')
-        .select(`
+        .select(
+          `
           *,
           varietes (
             id,
@@ -318,13 +338,14 @@ export const supabaseHelper = {
             type,
             origine
           )
-        `)
+        `
+        )
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Erreur lors de la récupération des achats:', error);
+      log.error('Erreur lors de la récupération des achats:', error);
       throw error;
     }
   },
@@ -339,17 +360,19 @@ export const supabaseHelper = {
       if (error) throw error;
       return data?.length || 0;
     } catch (error) {
-      console.error('Erreur lors de la récupération des sticks:', error);
+      log.error('Erreur lors de la récupération des sticks:', error);
       return 0;
     }
-  }
+  },
 };
 
 // Fonction utilitaire pour obtenir le numéro de la semaine
 function getWeekNumber(date) {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const d = new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+  );
   const dayNum = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-} 
+  return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+}

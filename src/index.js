@@ -5,24 +5,24 @@ import './index.css';
 import App from './App';
 
 // Chargement différé des pages avec un délai minimal pour assurer l'animation
-const Accueil = lazy(() => 
+const Accueil = lazy(() =>
   Promise.all([
     import('./pages/Accueil'),
-    new Promise(resolve => setTimeout(resolve, 300))
+    new Promise(resolve => setTimeout(resolve, 300)),
   ]).then(([module]) => module)
 );
 
-const Formulaire = lazy(() => 
+const Formulaire = lazy(() =>
   Promise.all([
     import('./pages/Formulaire'),
-    new Promise(resolve => setTimeout(resolve, 300))
+    new Promise(resolve => setTimeout(resolve, 300)),
   ]).then(([module]) => module)
 );
 
-const Statistiques = lazy(() => 
+const Statistiques = lazy(() =>
   Promise.all([
     import('./pages/Statistiques'),
-    new Promise(resolve => setTimeout(resolve, 300))
+    new Promise(resolve => setTimeout(resolve, 300)),
   ]).then(([module]) => module)
 );
 
@@ -30,31 +30,31 @@ const Statistiques = lazy(() =>
 const router = createBrowserRouter(
   [
     {
-      path: "/",
+      path: '/',
       element: <App />,
       children: [
         {
           index: true,
-          element: <Accueil />
+          element: <Accueil />,
         },
         {
-          path: "formulaire",
-          element: <Formulaire />
+          path: 'formulaire',
+          element: <Formulaire />,
         },
         {
-          path: "stats",
-          element: <Statistiques />
-        }
-      ]
-    }
+          path: 'stats',
+          element: <Statistiques />,
+        },
+      ],
+    },
   ],
   {
     basename: process.env.PUBLIC_URL || '/',
     future: {
       v7_startTransition: true,
       v7_relativeSplatPath: true,
-      v7_normalizeFormMethod: true
-    }
+      v7_normalizeFormMethod: true,
+    },
   }
 );
 

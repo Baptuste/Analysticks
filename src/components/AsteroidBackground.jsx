@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './AsteroidBackground.module.css';
 
 // Directions de base avec des angles variés
@@ -22,22 +22,23 @@ const specialColors = [
   'pink',
   'orange',
   'lime',
-  'purple'
+  'purple',
 ];
 
 const createAsteroid = () => {
   const id = Date.now() + Math.random();
-  
+
   // Sélection aléatoire d'une direction de base
-  const baseDirection = directions[Math.floor(Math.random() * directions.length)];
-  
+  const baseDirection =
+    directions[Math.floor(Math.random() * directions.length)];
+
   // Ajout d'une variation aléatoire à l'angle (-20° à +20°)
   const angleVariation = (Math.random() - 0.5) * 40;
   const finalAngle = baseDirection.angle + angleVariation;
-  
+
   // Taille variable avec une distribution plus naturelle
   const size = Math.pow(Math.random(), 1.5) * 4 + 1;
-  
+
   // Vitesse variable avec une distribution plus naturelle
   const baseSpeed = 4 + Math.random() * 6;
   const speedVariation = (Math.random() - 0.5) * 2;
@@ -60,7 +61,9 @@ const createAsteroid = () => {
 
   // 35% de chance d'avoir un astéroïde coloré
   const isSpecial = Math.random() < 0.35;
-  const specialClass = isSpecial ? `color-${specialColors[Math.floor(Math.random() * specialColors.length)]}` : '';
+  const specialClass = isSpecial
+    ? `color-${specialColors[Math.floor(Math.random() * specialColors.length)]}`
+    : '';
 
   // Rotation et échelle aléatoires pour plus de dynamisme
   const rotation = Math.random() * 360;
@@ -94,11 +97,11 @@ export default function AsteroidBackground() {
     const spawnAsteroid = () => {
       const spawnDelay = 150 + Math.random() * 150;
       const asteroid = createAsteroid();
-      
-      setAsteroids((prev) => [...prev, asteroid]);
+
+      setAsteroids(prev => [...prev, asteroid]);
 
       setTimeout(() => {
-        setAsteroids((prev) => prev.filter((a) => a.id !== asteroid.id));
+        setAsteroids(prev => prev.filter(a => a.id !== asteroid.id));
       }, asteroid.duration * 1000);
 
       timeoutId = setTimeout(spawnAsteroid, spawnDelay);
@@ -115,7 +118,7 @@ export default function AsteroidBackground() {
 
   return (
     <div className={styles.asteroidContainer}>
-      {asteroids.map((a) => {
+      {asteroids.map(a => {
         const asteroidStyle = {
           left: a.left,
           top: a.top,
@@ -137,7 +140,7 @@ export default function AsteroidBackground() {
               <div
                 className={styles.trail}
                 style={{
-                  background: `linear-gradient(90deg, transparent, ${a.colorInfo.color}, transparent)`
+                  background: `linear-gradient(90deg, transparent, ${a.colorInfo.color}, transparent)`,
                 }}
               />
             )}
